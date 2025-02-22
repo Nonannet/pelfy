@@ -1,0 +1,31 @@
+[project]
+name = "pelfy"
+version = "1.0.0"
+authors = [
+  { name="Nicolas Kruse", email="nicolas.kruse@nonan.net" },
+]
+description = "Parser for ELF files written in python"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/Nonannet/pelfy"
+Issues = "https://github.com/Nonannet/pelfy/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,4 +1,4 @@
-_elf_header_field = {
+elf_header_field = {
     "e_ident[EI_MAG]": {
         "32": "0x00", "64": "0x00", "size32": "4", "size64": "4", "field_name": "e_ident[EI_MAG]",
         "description": "0x7F followed by ELF(45 4c 46) in ASCII; these four bytes constitute the magic number"
@@ -81,7 +81,7 @@ _elf_header_field = {
     }
 }
 
-_section_header = {
+section_header = {
     "sh_name": {
         "32": "0x00", "64": "0x00", "size32": "4", "size64": "4", "field_name": "sh_name",
         "description": "An offset to a string in the .shstrtab section that represents the name of this section."
@@ -124,7 +124,7 @@ _section_header = {
     }
 }
 
-_section_header_types = {
+section_header_types = {
     0: {"value": "0x0", "name": "SHT_NULL", "description": "Section header table entry unused"},
     1: {"value": "0x1", "name": "SHT_PROGBITS", "description": "Program data"},
     2: {"value": "0x2", "name": "SHT_SYMTAB", "description": "Symbol table"},
@@ -147,7 +147,7 @@ _section_header_types = {
     1879048182: {"value": "0x6ffffff6", "name": "SHT_GNU_HASH", "description": "GNU-style hash table."}
 }
 
-_st_info_values = {
+st_info_values = {
     0: {"name": "STT_NOTYPE", "description": "Type is unspecified"},
     1: {"name": "STT_OBJECT", "description": "Data object (variable, array, etc.)"},
     2: {"name": "STT_FUNC", "description": "Function or executable code"},
@@ -160,7 +160,7 @@ _st_info_values = {
     12: {"name": "STT_HIPROC", "description": "Processor-specific symbol type"},
 }
 
-_stb_values = {
+stb_values = {
     0: {"name": "STB_LOCAL", "description": "Local, not visible outside the object file"},
     1: {"name": "STB_GLOBAL", "description": "Global, visible to all object files"},
     2: {"name": "STB_WEAK", "description": "Weak, like global but with lower precedence"},
@@ -168,7 +168,7 @@ _stb_values = {
     12: {"name": "STB_HIPROC", "description": "Processor-specific binding type"},
 }
 
-_relocation_table_types = {
+relocation_table_types = {
     0: {"name": "R_X86_64_NONE", "description": "No relocation"},
     1: {"name": "R_X86_64_64", "description": "Direct 64-bit relocation"},
     2: {"name": "R_X86_64_PC32", "description": "32-bit PC-relative relocation"},
@@ -185,7 +185,7 @@ _relocation_table_types = {
     13: {"name": "R_X86_64_8", "description": "8-bit absolute relocation"}
 }
 
-_e_machine_dict = {
+e_machine_dict = {
     0x0001: {"name": "EM_386", "description": "Intel 80386 (x86)"},
     0x0002: {"name": "EM_MIPS", "description": "MIPS (32-bit)"},
     0x0003: {"name": "EM_SPARC", "description": "SPARC (32-bit)"},

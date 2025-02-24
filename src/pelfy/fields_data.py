@@ -195,6 +195,5 @@ e_machine_dict = {
     0x0032: {"name": "EM_S390", "description": "IBM S/390"},
     0x003E: {"name": "EM_X86_64", "description": "x86-64 (64-bit)"},
     0x00F3: {"name": "EM_AARCH64", "description": "ARM64 (64-bit)"},
-    0x0103: {"name": "EM_RISCV", "description": "RISC-V (32/64-bit)"},
-    0xF3:    {"name": "EM_BPF", "description": "BPF (Berkeley Packet Filter)"}
+    0x0103: {"name": "EM_RISCV", "description": "RISC-V (32/64-bit)"}
 }

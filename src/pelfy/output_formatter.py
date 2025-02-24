@@ -14,32 +14,32 @@ def generate_table(data: list[list[Any]], columns: list[str],
 
 def generate_md_table(data: list[list[Any]], columns: list[str], right_adj_col: list[str] = []) -> str:
     column_widths = [max(len(str(item)) for item in column) for column in zip(*([columns] + data))]
-    
+
     table = ''
 
     formatted_row = ' | '.join(f"{str(item):<{column_widths[i]}}" for i, item in enumerate(columns))
     table += '| ' + formatted_row + ' |\n'
-    
+
     table += '|-' + '-|-'.join('-' * width for width in column_widths) + '-|\n'
-    
+
     for row in data:
         formatted_row = ''
         for i, item in enumerate(row):
             if columns[i] in right_adj_col:
-                formatted_row += f"| {str(item):>{column_widths[i]}} " 
+                formatted_row += f"| {str(item):>{column_widths[i]}} "
             else:
                 formatted_row += f"| {str(item):<{column_widths[i]}} "
         table += formatted_row + "|\n"
-    
+
     return table
 
 
 def generate_html_table(data: list[list[Any]], columns: list[str], right_adj_col: list[str] = []) -> str:
     table_html = "<table border='1'>\n"
-    
+
     table_html += "<thead>\n<tr>\n"
     for column in columns:
-        table_html += f"  <th>{column}</th>\n"
+        table_html += f"  <th style='text-align:left'>{column}</th>\n"
     table_html += "</tr>\n</thead>\n"
 
     table_html += "<tbody>\n"
@@ -49,7 +49,7 @@ def generate_html_table(data: list[list[Any]], columns: list[str], right_adj_col
             if columns[i] in right_adj_col:
                 table_html += f"  <td style='text-align:right'>{item}</td>\n"
             else:
-                table_html += f"  <td>{item}</td>\n"
+                table_html += f"  <td style='text-align:left'>{item}</td>\n"
         table_html += "</tr>\n"
     table_html += "</tbody>\n"
 

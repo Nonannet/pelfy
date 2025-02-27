@@ -1,9 +1,11 @@
 from typing import Any, Literal
 
+table_format = Literal['text', 'markdown', 'html']
+
 
 def generate_table(data: list[list[Any]], columns: list[str],
                    right_adj_col: list[str] = [],
-                   format: Literal['text', 'markdown', 'html'] = 'markdown'):
+                   format: table_format = 'markdown'):
     if format == 'html':
         return generate_html_table(data, columns, right_adj_col)
     elif format == 'markdown':

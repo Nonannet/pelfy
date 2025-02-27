@@ -22,12 +22,8 @@ class elf_symbol():
 
         self.index = index
 
-        st_info = fdat.st_info_values[fields['st_info'] & 0x0F]
-        stb = fdat.stb_values[fields['st_info'] >> 4]
-
-        self.stb = stb['name']
-        self.description = st_info['description']
-        self.info = st_info['name']
+        self.info, self.description = fdat.st_info_values[fields['st_info'] & 0x0F]
+        self.stb, self.stb_description = fdat.stb_values[fields['st_info'] >> 4]
 
     def read_data(self) -> bytes:
         offset = self.file.sections[self['st_shndx']]['sh_offset'] + self['st_value']
@@ -47,15 +43,17 @@ class elf_symbol():
                     ret.append(reloc)
         return relocation_list(ret)
 
-    def __getitem__(self, key: str):
-        assert key in self.fields, f'Unknown field name: {key}'
-        return self.fields[key]
+    def __getitem__(self, key: str | int):
+        if isinstance(key, str):
+            assert key in self.fields, f'Unknown field name: {key}'
+            return self.fields[key]
+        else:
+            return list(self.fields.values())[key]
 
     def __repr__(self):
-        stb = fdat.stb_values[self.fields['st_info'] >> 4]
         return f'index             {self.index}\n' +\
                f'name              {self.name}\n' +\
-               f'stb               {self.stb} ({stb["description"]})\n' +\
+               f'stb               {self.stb} ({self.stb_description})\n' +\
                f'info              {self.info} ({self.description})\n' +\
                '\n'.join(f'{k:18} {v:4}' for k, v in self.fields.items()) + '\n'
 
@@ -67,17 +65,25 @@ class elf_section():
         self.index = index
         self.name = name
         self.data = self.file.read_bytes(self['sh_offset'], self['sh_size'])
-
-        assert fields['sh_type'] in fdat.section_header_types, f"Unknown section type: {hex(fields['sh_type'])}"
-        self.description = fdat.section_header_types[fields['sh_type']]['description']
-        self.type = fdat.section_header_types[fields['sh_type']]['name']
+        
+        if fields['sh_type'] > 0x60000000:
+            self.description = [v for k, v in fdat.section_header_types_ex.items() if k >= fields['sh_type']][0]
+            self.type = str(hex(fields['sh_type']))
+        elif fields['sh_type'] in fdat.section_header_types:
+            self.type, self.description = fdat.section_header_types[fields['sh_type']]
+        else:
+            self.description = ''
+            self.type = str(hex(fields['sh_type']))
 
     def get_data_hex(self):
         return ' '.join(f'{d:02X}' for d in self.data)
 
-    def __getitem__(self, key: str):
-        assert key in self.fields, f'Unknown field name: {key}'
-        return self.fields[key]
+    def __getitem__(self, key: str | int):
+        if isinstance(key, str):
+            assert key in self.fields, f'Unknown field name: {key}'
+            return self.fields[key]
+        else:
+            return list(self.fields.values())[key]
 
     def __repr__(self):
         return f'index             {self.index}\n' +\
@@ -87,21 +93,31 @@ class elf_section():
 
 
 class elf_relocation():
-    def __init__(self, file: 'elf_file', fields: dict[str, int], symbol_index: int, relocation_type: int, sh_info: int):
+    def __init__(self, file: 'elf_file', fields: dict[str, int], symbol_index: int, relocation_type: int, sh_info: int, index: int):
         self.fields = fields
         self.file = file
+        self.index = index
         self.symbol = file.symbols[symbol_index]
-        self.description = fdat.relocation_table_types[relocation_type]['description']
-        self.type = fdat.relocation_table_types[relocation_type]['name']
+        reloc_types = fdat.relocation_table_types.get(file.architecture)
+        if reloc_types and relocation_type in reloc_types:
+            self.calculation = reloc_types[relocation_type][2]
+            self.type = reloc_types[relocation_type][0]
+        else:
+            self.calculation = ''
+            self.type = str(relocation_type)
         self.target_section = file.sections[sh_info]
 
-    def __getitem__(self, key: str):
-        assert key in self.fields, f'Unknown field name: {key}'
-        return self.fields[key]
+    def __getitem__(self, key: str | int):
+        if isinstance(key, str):
+            assert key in self.fields, f'Unknown field name: {key}'
+            return self.fields[key]
+        else:
+            return list(self.fields.values())[key]
 
     def __repr__(self):
-        return f'symbol               {self.symbol.name}\n' +\
-               f'relocation type      {self.type} ({self.description})\n' +\
+        return f'index                {self.symbol.index}\n' +\
+               f'symbol               {self.symbol.name}\n' +\
+               f'relocation type      {self.type} ({self.calculation})\n' +\
                '\n'.join(f'{k:18} {v:4}' for k, v in self.fields.items()) + '\n'
 
 
@@ -116,11 +132,14 @@ class elf_list(Generic[_T]):
             return elements[0]
         else:
             return self._data.__getitem__(key)
+        
+    def __len__(self):
+        return len(self._data)
 
     def __iter__(self):
         return iter(self._data)
 
-    def _repr_table(self, format: Literal['text', 'markdown', 'html']) -> str:
+    def _repr_table(self, format: output_formatter.table_format) -> str:
         return 'not implemented'
 
     def to_html(self):
@@ -137,8 +156,7 @@ class elf_list(Generic[_T]):
 
 
 class section_list(elf_list[elf_section]):
-
-    def _repr_table(self, format: Literal['text', 'markdown', 'html']):
+    def _repr_table(self, format: output_formatter.table_format):
         columns = ['index', 'name', 'type', 'description']
         data: list[list[str | int]] = [[item.index, item.name, item.type,
                                        item.description] for item in self]
@@ -146,8 +164,7 @@ class section_list(elf_list[elf_section]):
 
 
 class symbol_list(elf_list[elf_symbol]):
-
-    def _repr_table(self, format: Literal['text', 'markdown', 'html']):
+    def _repr_table(self, format: output_formatter.table_format):
         columns = ['index', 'name', 'info', 'size', 'stb', 'description']
         data: list[list[str | int]] = [[item.index, item.name, item.info, item.fields['st_size'],
                                        item.stb, item.description] for item in self]
@@ -155,10 +172,9 @@ class symbol_list(elf_list[elf_symbol]):
 
 
 class relocation_list(elf_list[elf_relocation]):
-
-    def _repr_table(self, format: Literal['text', 'markdown', 'html']):
-        columns = ['symbol name', 'type', 'description']
-        data: list[list[str | int]] = [[item.symbol.name, item.type, item.description] for item in self]
+    def _repr_table(self, format: output_formatter.table_format):
+        columns = ['index', 'symbol name', 'type', 'calculation']
+        data: list[list[str | int]] = [[item.index, item.symbol.name, item.type, item.calculation] for item in self]
         return output_formatter.generate_table(data, columns, format=format)
 
 
@@ -181,7 +197,7 @@ class elf_file:
         self.fields = {fn: self._read_int_from_elf_field(fn) for fn in fdat.elf_header_field.keys()}
 
         arch_entr = fdat.e_machine_dict.get(self.fields['e_machine'])
-        self.architecture = arch_entr['name'] + ' - ' + arch_entr['description'] if arch_entr else 'Unknown'
+        self.architecture = arch_entr[0] if arch_entr else str(self.fields['e_machine'])
 
         section_data = list(self._list_sections())
         name_addr: dict[str, int] = section_data[self.fields['e_shstrndx']] if section_data else dict()
@@ -201,7 +217,7 @@ class elf_file:
         self.functions = symbol_list(s for s in self.symbols if s.info == 'STT_FUNC')
         self.objects = symbol_list(s for s in self.symbols if s.info == 'STT_OBJECT')
 
-        self.code_relocations = self.get_relocations('.rela.text')
+        self.code_relocations = self.get_relocations(['.rela.text', '.rel.text'])
 
     def _list_sections(self):
         for i in range(self.fields['e_shnum']):
@@ -230,38 +246,38 @@ class elf_file:
 
                 yield elf_symbol(self, ret, j)
 
-    def get_relocations(self, reloc_section: elf_section | str | None = None) -> relocation_list:
+    def get_relocations(self, reloc_section: elf_section | str | list[str] | None = None) -> relocation_list:
         if isinstance(reloc_section, elf_section):
-            assert reloc_section.type == 'SHT_RELA', f'{reloc_section.name} is not a relocation section'
+            assert reloc_section.type in ('SHT_REL', 'SHT_RELA'), f'{reloc_section.name} is not a relocation section'
             return relocation_list(self._list_relocations(reloc_section))
         else:
             relocations: list[elf_relocation] = list()
             for sh in self.sections:
-                if sh.type == 'SHT_RELA':
-                    if sh.name == reloc_section or not isinstance(reloc_section, str):
+                if sh.type in ('SHT_REL', 'SHT_RELA'):
+                    if reloc_section is None or \
+                    (isinstance(reloc_section, str) and sh.name == reloc_section) or \
+                    (isinstance(reloc_section, list) and sh.name in reloc_section):
                         relocations += relocation_list(self._list_relocations(sh))
 
             return relocation_list(relocations)
 
     def _list_relocations(self, sh: elf_section):
-        assert sh.type == 'SHT_RELA', 'Section must be a relocation section (currently only SHT_RELA is supported)'
-
         offs = sh['sh_offset']
-        for i in range(offs, sh['sh_size'] + offs, sh['sh_entsize']):
+        for i, el_off in enumerate(range(offs, sh['sh_size'] + offs, sh['sh_entsize'])):
             ret: dict[str, int] = dict()
 
             if self.bit_width == 32:
-                ret['r_offset'] = self.read_int(i, 4)
-                r_info = self.read_int(i + 4, 4)
+                ret['r_offset'] = self.read_int(el_off, 4)
+                r_info = self.read_int(el_off + 4, 4)
                 ret['r_info'] = r_info
-                ret['r_addend'] = self.read_int(i + 8, 4, True)
-                yield elf_relocation(self, ret, r_info >> 8, r_info & 0xFF, sh['sh_info'])
+                ret['r_addend'] = self.read_int(el_off + 8, 4, True) if sh.type == 'SHT_RELA' else 0
+                yield elf_relocation(self, ret, r_info >> 8, r_info & 0xFF, sh['sh_info'], i)
             elif self.bit_width == 64:
-                ret['r_offset'] = self.read_int(i, 8)
-                r_info = self.read_int(i + 8, 8)
+                ret['r_offset'] = self.read_int(el_off, 8)
+                r_info = self.read_int(el_off + 8, 8)
                 ret['r_info'] = r_info
-                ret['r_addend'] = self.read_int(i + 16, 8, True)
-                yield elf_relocation(self, ret, r_info >> 32, r_info & 0xFFFFFFFF, sh['sh_info'])
+                ret['r_addend'] = self.read_int(el_off + 16, 8, True) if sh.type == 'SHT_RELA' else 0
+                yield elf_relocation(self, ret, r_info >> 32, r_info & 0xFFFFFFFF, sh['sh_info'], i)
 
     def read_bytes(self, offset: int, num_bytes: int):
         return self._data[offset:offset + num_bytes]

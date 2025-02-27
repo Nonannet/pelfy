@@ -35,8 +35,8 @@ CMD bash make_objs.sh gcc -O0 && \
     bash make_objs.sh gcc -O3 && \
     bash make_objs.sh arm-linux-gnueabihf-gcc-12 -O0 && \
     bash make_objs.sh arm-linux-gnueabihf-gcc-12 -O3 && \
-    bash make_objs.sh aarch64-linux-gnueabihf-gcc-12 -O0 && \
-    bash make_objs.sh aarch64-linux-gnueabihf-gcc-12 -O3 && \
+    bash make_objs.sh aarch64-linux-gnu-gcc-12 -O0 && \
+    bash make_objs.sh aarch64-linux-gnu-gcc-12 -O3 && \
     bash make_objs.sh mips-linux-gnu-gcc-12 -O0 && \
     bash make_objs.sh mips-linux-gnu-gcc-12 -O3 && \
     bash make_objs.sh riscv64-linux-gnu-gcc-12 -O0 && \

@@ -74,7 +74,7 @@ class elf_symbol():
         """
         assert self.section, 'This symbol is not associated to a data section'
         if self.section.type == 'SHT_NOBITS':
-            return b'\x00' * self['sh_size']
+            return b'\x00' * self['st_size']
         else:
             offset = self.section['sh_offset'] + self['st_value']
             return self.file.read_bytes(offset, self['st_size'])

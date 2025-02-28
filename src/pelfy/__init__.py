@@ -112,7 +112,7 @@ class elf_symbol():
                f'name              {self.name}\n' +\
                f'stb               {self.stb} ({self.stb_description})\n' +\
                f'info              {self.info} ({self.description})\n' +\
-               '\n'.join(f'{k:18} {v:4}' for k, v in self.fields.items()) + '\n'
+               '\n'.join(f"{k:18} {v:4} {fdat.symbol_fields[k]}" for k, v in self.fields.items()) + '\n'
 
 
 class elf_section():
@@ -338,9 +338,9 @@ class symbol_list(elf_list[elf_symbol]):
     """A class for representing a list of ELF symbols
     """
     def _compact_table(self) -> tuple[list[str], list[list[int | str]], list[str]]:
-        columns = ['index', 'name', 'info', 'size', 'stb', 'description']
+        columns = ['index', 'name', 'info', 'size', 'stb', 'section', 'description']
         data: list[list[str | int]] = [[item.index, item.name, item.info, item.fields['st_size'],
-                                       item.stb, item.description] for item in self]
+                                       item.stb, item.section.name if item.section else '', item.description] for item in self]
         return columns, data, ['index', 'size']
 
 

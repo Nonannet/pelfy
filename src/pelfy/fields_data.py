@@ -316,16 +316,25 @@ section_header_types_ex = {0x60000000: 'OS-specific',
                            0x70000000: 'Processor-specific',
                            0x80000000: 'Application-specific'}
 
+symbol_fields = {
+    "st_name": "Index into the string table for the symbol's name",
+    "st_info": "Encodes the symbol's type and its binding attribute",
+    "st_other": "Defines symbol visibility within and outside the object file",
+    "st_shndx": "Specifies which section this symbol is associated with",
+    "st_value": "Holds the symbol's address or offset, depending on context",
+    "st_size": "Specifies the size of the symbol (e.g., function length or variable size)"
+}
+
 st_info_values = {
-    0: ("STT_NOTYPE", "Symbol type is unspecified"),
-    1: ("STT_OBJECT", "Symbol is a data object"),
-    2: ("STT_FUNC", "Symbol is a code object"),
-    3: ("STT_SECTION", "Symbol associated with a section"),
-    4: ("STT_FILE", "Symbol's name is file name"),
-    5: ("STT_COMMON", "Symbol is a common data object"),
-    6: ("STT_TLS", "Symbol is thread-local data object"),
+    0: ("STT_NOTYPE", "Type is unspecified"),
+    1: ("STT_OBJECT", "Data object"),
+    2: ("STT_FUNC", "Code object"),
+    3: ("STT_SECTION", "Section associated"),
+    4: ("STT_FILE", "File name"),
+    5: ("STT_COMMON", "Common data object"),
+    6: ("STT_TLS", "Thread-local data object"),
     7: ("STT_NUM", "Number of defined types"),
-    10: ("STT_GNU_IFUNC", "Symbol is indirect code object")
+    10: ("STT_GNU_IFUNC", "Indirect code object")
 }
 
 stb_values = {

@@ -1,6 +1,6 @@
 from . import fields_data as fdat
 from . import output_formatter
-from typing import TypeVar, Literal, Iterable, Generic, Iterator, Generator, Any
+from typing import TypeVar, Literal, Iterable, Generic, Iterator, Generator
 
 _T = TypeVar('_T')
 
@@ -406,12 +406,12 @@ class elf_file:
 
         self.code_relocations = self.get_relocations(['.rela.text', '.rel.text'])
 
-    def _list_sections(self) -> Generator[dict[str, int]]:
+    def _list_sections(self) -> Generator[dict[str, int], None, None]:
         for i in range(self.fields['e_shnum']):
             offs = self.fields['e_shoff'] + i * self.fields['e_shentsize']
             yield {fn: self._read_from_sh_field(offs, fn) for fn in fdat.section_header.keys()}
 
-    def _list_symbols(self) -> Generator[elf_symbol]:
+    def _list_symbols(self) -> Generator[elf_symbol, None, None]:
         if self.symbol_table_section:
             offs = self.symbol_table_section['sh_offset']
 
@@ -460,7 +460,7 @@ class elf_file:
 
             return relocation_list(relocations)
 
-    def _list_relocations(self, sh: elf_section) -> Generator[elf_relocation]:
+    def _list_relocations(self, sh: elf_section) -> Generator[elf_relocation, None, None]:
         """List relocations for a elf_section.
 
         Args:

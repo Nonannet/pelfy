@@ -271,7 +271,7 @@ section_header = {
     },
     "sh_size": {
         "32": "0x14", "64": "0x20", "size32": "4", "size64": "8", "field_name": "sh_size",
-        "description": "Size in bytes of the section in the file image. May be 0."
+        "description": "Size in bytes of the section in memory or 0. May be equal to size in file."
     },
     "sh_link": {
         "32": "0x18", "64": "0x28", "size32": "4", "size64": "4", "field_name": "sh_link",

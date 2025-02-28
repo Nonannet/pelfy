@@ -51,7 +51,7 @@ elf.sections
 elf.functions
 ```
 | index | name               | info     | size | stb        | description             |
-|-------|--------------------|----------|-----:|------------|-------------------------|
+|------:|--------------------|----------|-----:|------------|-------------------------|
 |    11 | result_float       | STT_FUNC |    8 | STB_GLOBAL | Symbol is a code object |
 |    12 | result_float_float | STT_FUNC |   12 | STB_GLOBAL | Symbol is a code object |
 |    13 | add_float_float    | STT_FUNC |   12 | STB_GLOBAL | Symbol is a code object |
@@ -61,7 +61,7 @@ elf.functions
 elf.symbols['read_float'].get_relocations()
 ```
 | index | symbol name        | type                 | calculation |
-|-------|--------------------|----------------------|-------------|
+|------:|--------------------|----------------------|-------------|
 |     4 | .LANCHOR0          | R_RISCV_PCREL_HI20   | S + A - P   |
 |     5 |                    | R_RISCV_RELAX        |             |
 |     6 | .L0                | R_RISCV_PCREL_LO12_I | S - P       |

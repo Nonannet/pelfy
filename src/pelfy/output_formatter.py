@@ -11,7 +11,7 @@ def generate_table(data: list[list[Any]], columns: list[str],
     elif format == 'markdown':
         return generate_md_table(data, columns, right_adj_col)
     else:
-        return generate_md_table(data, columns, right_adj_col).replace('|', '')
+        return generate_md_table(data, columns, right_adj_col).replace('|', '').replace(':', '-')
 
 
 def generate_md_table(data: list[list[Any]], columns: list[str], right_adj_col: list[str] = []) -> str:
@@ -22,7 +22,7 @@ def generate_md_table(data: list[list[Any]], columns: list[str], right_adj_col: 
     formatted_row = ' | '.join(f"{str(item):<{column_widths[i]}}" for i, item in enumerate(columns))
     table += '| ' + formatted_row + ' |\n'
 
-    table += '|-' + '-|-'.join('-' * width for width in column_widths) + '-|\n'
+    table += '|' + '|'.join('-' * width + '-:' if c in right_adj_col else ':-' + '-' * width for width, c in zip(column_widths, columns)) + '|\n'
 
     for row in data:
         formatted_row = ''

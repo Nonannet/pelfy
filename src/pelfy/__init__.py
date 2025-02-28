@@ -302,6 +302,9 @@ class elf_list(Generic[_T]):
     def _repr_html_(self) -> str:
         return self._repr_table('html')
 
+    def _repr_markdown_(self) -> str:
+        return self._repr_table('markdown')
+
 
 class section_list(elf_list[elf_section]):
     """A class for representing a list of ELF section

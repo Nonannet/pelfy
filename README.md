@@ -1,17 +1,17 @@
 # pelfy
 
 ## Description
-Pelfy is ELF (Executable and Linkable Format) parser written in python. It shows
-header fields, sections, symbols and relocation and gives access to all raw data
-as well as human readable names. 
+Pelfy (Python Executable and Linkable Format analyzer) is an ELF parser written
+in python. It shows header fields, sections, symbols and relocation and gives
+access to all raw data as well as human readable representations. 
 
 ### Key Features
 - Provide names for fields and values as well as descriptions
-- Relocation types for x86, mips, arm and risc-v all in 32 and 64 bit
-- Compact syntax
-- Outputs tables in HTML, markdown or text
-- Jupyter notebook support
-- Pure python and no dependencies
+- Relocation types for x86, MIPS, ARM and RISC-V all in 32 and 64 bit
+- Outputs tables in nicely formatted HTML, markdown or text
+- Uses HTML outputs for Jupyter Notebook integration
+- Compact code base
+- Pure fully static typed python and no other dependencies
 
 ### Usage Scenarios
 - Reverse engineering tools

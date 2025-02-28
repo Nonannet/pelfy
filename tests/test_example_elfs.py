@@ -2,11 +2,11 @@ import pelfy
 import glob
 
 
-def known_name(text: str):
+def known_name(text: str) -> bool:
     return not text.isnumeric() and not text.startswith('0x')
 
 
-def test_simple_c():
+def test_simple_c() -> None:
     file_list = glob.glob('tests/obj/*.o')
     assert file_list, "No test object files found"
     for path in file_list:

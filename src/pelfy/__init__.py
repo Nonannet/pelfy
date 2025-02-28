@@ -1,6 +1,6 @@
 from . import fields_data as fdat
 from . import output_formatter
-from typing import TypeVar, Literal, Iterable, Generic
+from typing import TypeVar, Literal, Iterable, Generic, Iterator, Generator, Any
 
 _T = TypeVar('_T')
 
@@ -93,14 +93,14 @@ class elf_symbol():
                     ret.append(reloc)
         return relocation_list(ret)
 
-    def __getitem__(self, key: str | int):
+    def __getitem__(self, key: str | int) -> int:
         if isinstance(key, str):
             assert key in self.fields, f'Unknown field name: {key}'
             return self.fields[key]
         else:
             return list(self.fields.values())[key]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'index             {self.index}\n' +\
                f'name              {self.name}\n' +\
                f'stb               {self.stb} ({self.stb_description})\n' +\
@@ -162,14 +162,14 @@ class elf_section():
         data = self.file.read_bytes(self['sh_offset'], self['sh_size'])
         return ' '.join(f'{d:02X}' for d in data)
 
-    def __getitem__(self, key: str | int):
+    def __getitem__(self, key: str | int) -> int:
         if isinstance(key, str):
             assert key in self.fields, f'Unknown field name: {key}'
             return self.fields[key]
         else:
             return list(self.fields.values())[key]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'index             {self.index}\n' +\
                f'name              {self.name}\n' +\
                f'type              {self.type} ({self.description})\n' +\
@@ -218,16 +218,16 @@ class elf_relocation():
         else:
             self.calculation = ''
             self.type = str(relocation_type)
-        self.target_section = file.sections[sh_info]
+        self.target_section: elf_section = file.sections[sh_info]
 
-    def __getitem__(self, key: str | int):
+    def __getitem__(self, key: str | int) -> int:
         if isinstance(key, str):
             assert key in self.fields, f'Unknown field name: {key}'
             return self.fields[key]
         else:
             return list(self.fields.values())[key]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'index                {self.symbol.index}\n' +\
                f'symbol               {self.symbol.name}\n' +\
                f'relocation type      {self.type} ({self.calculation})\n' +\
@@ -243,7 +243,7 @@ class elf_list(Generic[_T]):
     def __init__(self, data: Iterable[_T]):
         self._data = list(data)
 
-    def __getitem__(self, key: int | str):
+    def __getitem__(self, key: int | str) -> _T:
         if isinstance(key, str):
             elements = [el for el in self._data if getattr(el, 'name', '') == key]
             assert elements, f'Unknown name: {key}'
@@ -251,16 +251,16 @@ class elf_list(Generic[_T]):
         else:
             return self._data.__getitem__(key)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._data)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[_T]:
         return iter(self._data)
 
     def _compact_table(self) -> tuple[list[str], list[list[str | int]], list[str]]:
         return [], [[]], []
 
-    def _repr_table(self, format: output_formatter.table_format, raw_data: bool = False):
+    def _repr_table(self, format: output_formatter.table_format, raw_data: bool = False) -> str:
         if raw_data and len(self):
             table_dict: list[dict[str, int]] = [el.__dict__.get('fields', {' ': 0}) for el in self]
             columns = list(table_dict[0].keys())
@@ -296,17 +296,17 @@ class elf_list(Generic[_T]):
         """
         return self._repr_table('markdown')
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self._repr_table('text')
 
-    def _repr_html_(self):
+    def _repr_html_(self) -> str:
         return self._repr_table('html')
 
 
 class section_list(elf_list[elf_section]):
     """A class for representing a list of ELF section
     """
-    def _compact_table(self):
+    def _compact_table(self) -> tuple[list[str], list[list[int | str]], list[str]]:
         columns = ['index', 'name', 'type', 'description']
         data: list[list[str | int]] = [[item.index, item.name, item.type,
                                        item.description] for item in self]
@@ -316,7 +316,7 @@ class section_list(elf_list[elf_section]):
 class symbol_list(elf_list[elf_symbol]):
     """A class for representing a list of ELF symbols
     """
-    def _compact_table(self):
+    def _compact_table(self) -> tuple[list[str], list[list[int | str]], list[str]]:
         columns = ['index', 'name', 'info', 'size', 'stb', 'description']
         data: list[list[str | int]] = [[item.index, item.name, item.info, item.fields['st_size'],
                                        item.stb, item.description] for item in self]
@@ -326,7 +326,7 @@ class symbol_list(elf_list[elf_symbol]):
 class relocation_list(elf_list[elf_relocation]):
     """A class for representing a list of ELF relocations
     """
-    def _compact_table(self):
+    def _compact_table(self) -> tuple[list[str], list[list[int | str]], list[str]]:
         columns = ['index', 'symbol name', 'type', 'calculation']
         data: list[list[str | int]] = [[item.index, item.symbol.name, item.type,
                                         item.calculation] for item in self]
@@ -406,12 +406,12 @@ class elf_file:
 
         self.code_relocations = self.get_relocations(['.rela.text', '.rel.text'])
 
-    def _list_sections(self):
+    def _list_sections(self) -> Generator[dict[str, int]]:
         for i in range(self.fields['e_shnum']):
             offs = self.fields['e_shoff'] + i * self.fields['e_shentsize']
             yield {fn: self._read_from_sh_field(offs, fn) for fn in fdat.section_header.keys()}
 
-    def _list_symbols(self):
+    def _list_symbols(self) -> Generator[elf_symbol]:
         if self.symbol_table_section:
             offs = self.symbol_table_section['sh_offset']
 
@@ -460,7 +460,7 @@ class elf_file:
 
             return relocation_list(relocations)
 
-    def _list_relocations(self, sh: elf_section):
+    def _list_relocations(self, sh: elf_section) -> Generator[elf_relocation]:
         """List relocations for a elf_section.
 
         Args:
@@ -554,10 +554,10 @@ class elf_file:
         byte_len = int(field['size' + str(self.bit_width)])
         return self.read_int(offs, byte_len)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         hf_list = ((hf, self.fields[hf['field_name']]) for hf in fdat.elf_header_field.values())
         return '\n'.join(f"{hf['field_name']:24} {v:4}   {hf['description']}" for hf, v in hf_list) + '\n'
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> int:
         assert key in self.fields, f'Unknown field name: {key}'
         return self.fields[key]

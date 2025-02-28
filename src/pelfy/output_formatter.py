@@ -5,7 +5,7 @@ table_format = Literal['text', 'markdown', 'html']
 
 def generate_table(data: list[list[Any]], columns: list[str],
                    right_adj_col: list[str] = [],
-                   format: table_format = 'markdown'):
+                   format: table_format = 'markdown') -> str:
     if format == 'html':
         return generate_html_table(data, columns, right_adj_col)
     elif format == 'markdown':

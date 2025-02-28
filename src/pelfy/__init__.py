@@ -73,8 +73,11 @@ class elf_symbol():
             Symbol data
         """
         assert self.section, 'This symbol is not associated to a data section'
-        offset = self.section['sh_offset'] + self['st_value']
-        return self.file.read_bytes(offset, self['st_size'])
+        if self.section.type == 'SHT_NOBITS':
+            return b'\x00' * self['sh_size']
+        else:
+            offset = self.section['sh_offset'] + self['st_value']
+            return self.file.read_bytes(offset, self['st_size'])
 
     def read_data_hex(self) -> str:
         return ' '.join(f'{d:02X}' for d in self.read_data())
@@ -160,7 +163,10 @@ class elf_section():
         Returns:
             Data of the section
         """
-        return self.file.read_bytes(self['sh_offset'], self['sh_size'])
+        if self.type == 'SHT_NOBITS':
+            return b'\x00' * self['sh_size']
+        else:
+            return self.file.read_bytes(self['sh_offset'], self['sh_size'])
 
     def get_symbols(self) -> 'symbol_list':
         """Lists all ELF symbols associated with this section

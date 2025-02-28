@@ -33,6 +33,8 @@ class elf_symbol():
 
         name: Name of the symbol
 
+        section: section where the symbol data is placed
+
         index: Absolut index in the symbol table
 
         info: Type of the symbol
@@ -55,6 +57,8 @@ class elf_symbol():
         else:
             self.name = ''
 
+        self.section: elf_section | None = self.file.sections[self['st_shndx']] if self['st_shndx'] < len(self.file.sections) else None
+
         self.index = index
 
         self.info, self.description = fdat.st_info_values[fields['st_info'] & 0x0F]
@@ -68,7 +72,8 @@ class elf_symbol():
         Returns:
             Symbol data
         """
-        offset = self.file.sections[self['st_shndx']]['sh_offset'] + self['st_value']
+        assert self.section, 'This symbol is not associated to a data section'
+        offset = self.section['sh_offset'] + self['st_value']
         return self.file.read_bytes(offset, self['st_size'])
 
     def read_data_hex(self) -> str:
@@ -76,7 +81,7 @@ class elf_symbol():
 
     def get_relocations(self) -> 'relocation_list':
         """List all relocations that are pointing to this symbol.
-        The symbol must be of type SHT_PROGBITS (program code). Therefore
+        The symbol section must be of type SHT_PROGBITS (program code). Therefore
         this function lists typically all relocations that will be
         applied to the function represented by the symbol.
 
@@ -84,10 +89,9 @@ class elf_symbol():
             List of relocations
         """
         ret: list[elf_relocation] = list()
-        section = self.file.sections[self.fields['st_shndx']]
-        assert section.type == 'SHT_PROGBITS'
+        assert self.section and self.section.type == 'SHT_PROGBITS'
         for reloc in self.file.get_relocations():
-            if reloc.target_section == section:
+            if reloc.target_section == self.section:
                 offset = reloc['r_offset'] - self['st_value']
                 if 0 <= offset < self['st_size']:
                     ret.append(reloc)
@@ -157,6 +161,14 @@ class elf_section():
             Data of the section
         """
         return self.file.read_bytes(self['sh_offset'], self['sh_size'])
+
+    def get_symbols(self) -> 'symbol_list':
+        """Lists all ELF symbols associated with this section
+
+        Returns:
+            Symbol list
+        """
+        return symbol_list(self.file._list_symbols(self.index))
 
     def get_data_hex(self) -> str:
         data = self.file.read_bytes(self['sh_offset'], self['sh_size'])
@@ -369,14 +381,15 @@ class elf_file:
         string_table_section: The string table section (first section with
             the name .strtab)
     """
-    def __init__(self, data: bytes):
+    def __init__(self, data: bytes | bytearray):
+        assert isinstance(data, (bytes, bytearray)), 'Binary ELF data must be provided as bytes or bytearray.'
         self._data = data
 
         # Defaults required for function _read_int_from_elf_field
         self.bit_width = 32
         self.byteorder: Literal['little', 'big'] = 'little'
 
-        assert self._read_bytes_from_elf_field('e_ident[EI_MAG]') == bytes([0x7F, 0x45, 0x4c, 0x46]), 'Not an ELF file'
+        assert self._read_bytes_from_elf_field('e_ident[EI_MAG]') == b'\x7fELF', 'Not an ELF file'
 
         self.bit_width = {1: 32, 2: 64}[self._read_int_from_elf_field('e_ident[EI_CLASS]')]
 
@@ -414,7 +427,7 @@ class elf_file:
             offs = self.fields['e_shoff'] + i * self.fields['e_shentsize']
             yield {fn: self._read_from_sh_field(offs, fn) for fn in fdat.section_header.keys()}
 
-    def _list_symbols(self) -> Generator[elf_symbol, None, None]:
+    def _list_symbols(self, section_index: int | None = None) -> Generator[elf_symbol, None, None]:
         if self.symbol_table_section:
             offs = self.symbol_table_section['sh_offset']
 
@@ -434,7 +447,8 @@ class elf_file:
                     ret['st_value'] = self.read_int(i + 8, 8)
                     ret['st_size'] = self.read_int(i + 16, 8)
 
-                yield elf_symbol(self, ret, j)
+                if section_index is None or section_index == ret['st_shndx']:
+                    yield elf_symbol(self, ret, j)
 
     def get_relocations(self, reloc_section: elf_section | str | list[str] | None = None) -> relocation_list:
         """List relocations.

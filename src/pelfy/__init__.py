@@ -213,13 +213,17 @@ class elf_relocation():
     Attributes:
         file: Points to the parent ELF file object.
 
-        index: Absolut index of the relocation the associated relocation section
+        index: Absolut index of the relocation in the associated relocation section
+
+        symbol: Symbol to relocate
 
         type: Type of the relocation
 
         calculation: Description of the relocation calculation
 
-        target_section: Pointing to the section that is relocation applies to
+        bits: number ob bits to patch by the relocation
+
+        target_section: Pointing to the section where this relocation applies to
 
         fields: All relocation header fields as dict
     """
@@ -231,11 +235,13 @@ class elf_relocation():
         self.symbol = file.symbols[symbol_index]
         reloc_types = fdat.relocation_table_types.get(file.architecture)
         if reloc_types and relocation_type in reloc_types:
-            self.calculation = reloc_types[relocation_type][2]
             self.type = reloc_types[relocation_type][0]
+            self.bits = reloc_types[relocation_type][1]
+            self.calculation = reloc_types[relocation_type][2]
         else:
-            self.calculation = ''
             self.type = str(relocation_type)
+            self.bits = 0
+            self.calculation = ''
         self.target_section: elf_section = file.sections[sh_info]
 
     def __getitem__(self, key: str | int) -> int:
@@ -248,7 +254,9 @@ class elf_relocation():
     def __repr__(self) -> str:
         return f'index                {self.symbol.index}\n' +\
                f'symbol               {self.symbol.name}\n' +\
-               f'relocation type      {self.type} ({self.calculation})\n' +\
+               f'relocation type      {self.type}\n' +\
+               f'calculation          {self.calculation}\n' +\
+               f'bits                 {self.bits}\n' +\
                '\n'.join(f'{k:18} {v:4}' for k, v in self.fields.items()) + '\n'
 
 
@@ -348,10 +356,10 @@ class relocation_list(elf_list[elf_relocation]):
     """A class for representing a list of ELF relocations
     """
     def _compact_table(self) -> tuple[list[str], list[list[int | str]], list[str]]:
-        columns = ['index', 'symbol name', 'type', 'calculation']
+        columns = ['index', 'symbol name', 'type', 'calculation', 'bits']
         data: list[list[str | int]] = [[item.index, item.symbol.name, item.type,
-                                        item.calculation] for item in self]
-        return columns, data, ['index']
+                                        item.calculation, item.bits] for item in self]
+        return columns, data, ['index', 'bits']
 
 
 class elf_file:

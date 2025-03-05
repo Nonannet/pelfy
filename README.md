@@ -19,7 +19,7 @@ access to all raw data as well as human readable representations.
 - Documentation
 
 ## Installation
-The package has no additional decencies. It can be installed with pip:
+The package has no additional dependencies. It can be installed with pip:
 
 ```bash
 pip install pelfy

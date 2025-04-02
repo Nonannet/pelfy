@@ -82,7 +82,7 @@ class elf_symbol():
     def data_hex(self) -> str:
         """Returns the binary data the symbol is pointing to as hex string.
         """
-        return ' '.join(f'{d:02X}' for d in self.read_data())
+        return ' '.join(f'{d:02X}' for d in self.data)
 
     @property
     def relocations(self) -> 'relocation_list':
@@ -170,8 +170,7 @@ class elf_section():
     def data_hex(self) -> str:
         """Returns the binary data from the section as hex string.
         """
-        data = self.file.read_bytes(self['sh_offset'], self['sh_size'])
-        return ' '.join(f'{d:02X}' for d in data)
+        return ' '.join(f'{d:02X}' for d in self.data)
 
     def __getitem__(self, key: str | int) -> int:
         if isinstance(key, str):

@@ -44,7 +44,7 @@ class elf_symbol():
     def __init__(self, file: 'elf_file', fields: dict[str, int], index: int):
         """
         Initializes ELF symbol instance
-        
+
         Args:
             file: ELF file object
             fields: symbol header fields

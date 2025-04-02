@@ -1,3 +1,11 @@
+"""Pelfy is an ELF parser for parsing header fields, sections, symbols and relocations.
+
+Typical usage example:
+
+    elf = pelfy.open_elf_file('obj/test-c-riscv64-linux-gnu-gcc-12-O3.o')
+    print(elf.sections)
+"""
+
 from . import fields_data as fdat
 from . import output_formatter
 from typing import TypeVar, Literal, Iterable, Generic, Iterator, Generator
@@ -21,34 +29,27 @@ def open_elf_file(file_path: str) -> 'elf_file':
 class elf_symbol():
     """A class for representing data of an ELF symbol
 
-    Args:
-        file: ELF file object
-
-        fields: symbol header fields
-
-        index: Absolut index in the symbol table
-
     Attributes:
         file: Points to the parent ELF file object.
-
         name: Name of the symbol
-
         section: section where the symbol data is placed
-
         index: Absolut index in the symbol table
-
         info: Type of the symbol
-
         description: Description of the symbol type
-
         stb: visibility of the symbol (local, global, etc.)
-
         stb_description: Description of the symbol visibility
-
         fields: All symbol header fields as dict
     """
 
     def __init__(self, file: 'elf_file', fields: dict[str, int], index: int):
+        """
+        Initializes ELF symbol instance
+        
+        Args:
+            file: ELF file object
+            fields: symbol header fields
+            index: Absolut index in the symbol table
+        """
         self.fields = fields
         self.file = file
 
@@ -118,29 +119,23 @@ class elf_symbol():
 class elf_section():
     """A class for representing data of an ELF section
 
-    Args:
-        file: ELF file object
-
-        fields: Section header fields
-
-        name: Name of the section
-
-        index: Absolut index in the symbol table
-
     Attributes:
         file: Points to the parent ELF file object.
-
         name: Name of the section
-
         index: Absolut index of the section
-
         type: Type of the section
-
         description: Description of the section type
-
         fields: All symbol header fields as dict
     """
     def __init__(self, file: 'elf_file', fields: dict[str, int], name: str, index: int):
+        """Initializes an ELF section instance
+
+        Args:
+            file: ELF file object
+            fields: Section header fields
+            name: Name of the section
+            index: Absolut index in the symbol table
+        """
         self.fields = fields
         self.file = file
         self.index = index
@@ -197,38 +192,28 @@ class elf_section():
 class elf_relocation():
     """A class for representing data of a relocation
 
-    Args:
-        file: ELF file object
-
-        fields: Relocation header fields
-
-        symbol_index: Index of the symbol to relocate in the symbol table
-
-        relocation_type: Type of the relocation (numeric)
-
-        sh_info: Index of the section this relocation applies to
-
-        index: Absolut index of the relocation in the associated relocation section
-
     Attributes:
         file: Points to the parent ELF file object.
-
         index: Absolut index of the relocation in the associated relocation section
-
         symbol: Symbol to relocate
-
         type: Type of the relocation
-
         calculation: Description of the relocation calculation
-
         bits: number ob bits to patch by the relocation
-
         target_section: Pointing to the section where this relocation applies to
-
         fields: All relocation header fields as dict
     """
     def __init__(self, file: 'elf_file', fields: dict[str, int], symbol_index: int,
                  relocation_type: int, sh_info: int, index: int):
+        """Initializes a ELF relocation instance
+
+        Args:
+            file: ELF file object
+            fields: Relocation header fields
+            symbol_index: Index of the symbol to relocate in the symbol table
+            relocation_type: Type of the relocation (numeric)
+            sh_info: Index of the section this relocation applies to
+            index: Absolut index of the relocation in the associated relocation section
+        """
         self.fields = fields
         self.file = file
         self.index = index
@@ -365,37 +350,29 @@ class relocation_list(elf_list[elf_relocation]):
 class elf_file:
     """A class for representing data of an ELF file in a structured form
 
-    Args:
-        data: binary ELF data
-
     Attributes:
         byteorder: Byte order of the architecture 'little' or 'big'
             (based on e_ident[EI_DATA])
-
         bit_width: Bit with of the architecture: 32 or 64 (based on
             e_ident[EI_CLASS])
-
         architecture: Name of the architecture (based on e_machine)
-
         fields: All ELF header fields as dict
-
         sections: A list of all ELF sections
-
         symbols: A list of all ELF symbols
-
         functions: A list of all function symbols (STT_FUNC)
-
         objects: A list of all variable/object symbols (STT_OBJECT)
-
         code_relocations: A list of all code relocations (.rela.text and .rel.text)
-
         symbol_table_section: The symbol table section (first section with
             the type SHT_SYMTAB)
-
         string_table_section: The string table section (first section with
             the name .strtab)
     """
     def __init__(self, data: bytes | bytearray):
+        """Initializes an ELF file instance
+
+        Args:
+            data: binary ELF data
+        """
         assert isinstance(data, (bytes, bytearray)), 'Binary ELF data must be provided as bytes or bytearray.'
         self._data = data
 
@@ -524,7 +501,6 @@ class elf_file:
         Args:
             offset: Specify first byte relative to the start of
                 the ELF file.
-
             num_bytes: Specify the number of bytes to read.
 
         Returns:
@@ -539,9 +515,7 @@ class elf_file:
         Args:
             offset: Specify first byte of the integer relative to
                 the start of the ELF file.
-
             num_bytes: Specify the size of the integer in bytes.
-
             signed: Select if the integer is a signed integer.
 
         Returns:
@@ -558,7 +532,6 @@ class elf_file:
         Args:
             offset: Specify first byte of the string relative to
                 the start of the ELF file.
-
             encoding: Encoding used for text decoding.
 
         Returns:

@@ -65,13 +65,11 @@ class elf_symbol():
         self.info, self.description = fdat.st_info_values[fields['st_info'] & 0x0F]
         self.stb, self.stb_description = fdat.stb_values[fields['st_info'] >> 4]
 
-    def read_data(self) -> bytes:
+    @property
+    def data(self) -> bytes:
         """Returns the binary data the symbol is pointing to.
         The offset in the ELF file is calculated by:
         sections[symbol.st_shndx].sh_offset + symbol.st_value
-
-        Returns:
-            Symbol data
         """
         assert self.section, 'This symbol is not associated to a data section'
         if self.section.type == 'SHT_NOBITS':
@@ -80,17 +78,18 @@ class elf_symbol():
             offset = self.section['sh_offset'] + self['st_value']
             return self.file.read_bytes(offset, self['st_size'])
 
-    def read_data_hex(self) -> str:
+    @property
+    def data_hex(self) -> str:
+        """Returns the binary data the symbol is pointing to as hex string.
+        """
         return ' '.join(f'{d:02X}' for d in self.read_data())
 
-    def get_relocations(self) -> 'relocation_list':
-        """List all relocations that are pointing to this symbol.
+    @property
+    def relocations(self) -> 'relocation_list':
+        """Relocations that are pointing to this symbol.
         The symbol section must be of type SHT_PROGBITS (program code). Therefore
-        this function lists typically all relocations that will be
+        this property returns typically all relocations that will be
         applied to the function represented by the symbol.
-
-        Returns:
-            List of relocations
         """
         ret: list[elf_relocation] = list()
         assert self.section and self.section.type == 'SHT_PROGBITS'
@@ -151,27 +150,26 @@ class elf_section():
             self.description = ''
             self.type = str(hex(fields['sh_type']))
 
-    def read_data(self) -> bytes:
+    @property
+    def data(self) -> bytes:
         """Returns the binary data from the section.
         The offset in the ELF file is given by: section.sh_offset
-
-        Returns:
-            Data of the section
         """
         if self.type == 'SHT_NOBITS':
             return b'\x00' * self['sh_size']
         else:
             return self.file.read_bytes(self['sh_offset'], self['sh_size'])
 
-    def get_symbols(self) -> 'symbol_list':
-        """Lists all ELF symbols associated with this section
-
-        Returns:
-            Symbol list
+    @property
+    def symbols(self) -> 'symbol_list':
+        """All ELF symbols associated with this section
         """
         return symbol_list(self.file._list_symbols(self.index))
 
-    def get_data_hex(self) -> str:
+    @property
+    def data_hex(self) -> str:
+        """Returns the binary data from the section as hex string.
+        """
         data = self.file.read_bytes(self['sh_offset'], self['sh_size'])
         return ' '.join(f'{d:02X}' for d in data)
 

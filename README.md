@@ -31,7 +31,7 @@ Example code and its outputs:
 ```python
 import pelfy
 
-elf = pelfy.open_elf_file('obj/test-c-riscv64-linux-gnu-gcc-12-O3.o')
+elf = pelfy.open_elf_file('tests/obj/test-c-riscv64-linux-gnu-gcc-12-O3.o')
 elf.sections
 ```
 | index | name              | type         | description                       |
@@ -58,7 +58,7 @@ elf.functions
 |    14 | mul_float_float    | STT_FUNC |   12 | STB_GLOBAL | Symbol is a code object |
 |    15 | read_float         | STT_FUNC |   16 | STB_GLOBAL | Symbol is a code object |
 ```python
-elf.symbols['read_float'].get_relocations()
+elf.symbols['read_float'].relocations
 ```
 | index | symbol name        | type                 | calculation |
 |------:|--------------------|----------------------|-------------|

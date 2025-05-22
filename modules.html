@@ -1,0 +1,856 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functions and classes &mdash; pyhoff  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="pelfy" href="readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyhoff
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pelfy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Functions and classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.open_elf_file"><code class="docutils literal notranslate"><span class="pre">open_elf_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#elf-classes">ELF classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.elf_file"><code class="docutils literal notranslate"><span class="pre">elf_file</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.byteorder"><code class="docutils literal notranslate"><span class="pre">elf_file.byteorder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.bit_width"><code class="docutils literal notranslate"><span class="pre">elf_file.bit_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.architecture"><code class="docutils literal notranslate"><span class="pre">elf_file.architecture</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.fields"><code class="docutils literal notranslate"><span class="pre">elf_file.fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.sections"><code class="docutils literal notranslate"><span class="pre">elf_file.sections</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.symbols"><code class="docutils literal notranslate"><span class="pre">elf_file.symbols</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.functions"><code class="docutils literal notranslate"><span class="pre">elf_file.functions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.objects"><code class="docutils literal notranslate"><span class="pre">elf_file.objects</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.code_relocations"><code class="docutils literal notranslate"><span class="pre">elf_file.code_relocations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.symbol_table_section"><code class="docutils literal notranslate"><span class="pre">elf_file.symbol_table_section</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.string_table_section"><code class="docutils literal notranslate"><span class="pre">elf_file.string_table_section</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.get_relocations"><code class="docutils literal notranslate"><span class="pre">elf_file.get_relocations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.read_bytes"><code class="docutils literal notranslate"><span class="pre">elf_file.read_bytes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.read_int"><code class="docutils literal notranslate"><span class="pre">elf_file.read_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_file.read_string"><code class="docutils literal notranslate"><span class="pre">elf_file.read_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.elf_list"><code class="docutils literal notranslate"><span class="pre">elf_list</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_list.to_dict_list"><code class="docutils literal notranslate"><span class="pre">elf_list.to_dict_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_list.to_html"><code class="docutils literal notranslate"><span class="pre">elf_list.to_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_list.to_markdown"><code class="docutils literal notranslate"><span class="pre">elf_list.to_markdown()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.elf_relocation"><code class="docutils literal notranslate"><span class="pre">elf_relocation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.file"><code class="docutils literal notranslate"><span class="pre">elf_relocation.file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.index"><code class="docutils literal notranslate"><span class="pre">elf_relocation.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.symbol"><code class="docutils literal notranslate"><span class="pre">elf_relocation.symbol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.type"><code class="docutils literal notranslate"><span class="pre">elf_relocation.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.calculation"><code class="docutils literal notranslate"><span class="pre">elf_relocation.calculation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.bits"><code class="docutils literal notranslate"><span class="pre">elf_relocation.bits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.target_section"><code class="docutils literal notranslate"><span class="pre">elf_relocation.target_section</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_relocation.fields"><code class="docutils literal notranslate"><span class="pre">elf_relocation.fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.elf_section"><code class="docutils literal notranslate"><span class="pre">elf_section</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.file"><code class="docutils literal notranslate"><span class="pre">elf_section.file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.name"><code class="docutils literal notranslate"><span class="pre">elf_section.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.index"><code class="docutils literal notranslate"><span class="pre">elf_section.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.type"><code class="docutils literal notranslate"><span class="pre">elf_section.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.description"><code class="docutils literal notranslate"><span class="pre">elf_section.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.fields"><code class="docutils literal notranslate"><span class="pre">elf_section.fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.data"><code class="docutils literal notranslate"><span class="pre">elf_section.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.data_hex"><code class="docutils literal notranslate"><span class="pre">elf_section.data_hex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_section.symbols"><code class="docutils literal notranslate"><span class="pre">elf_section.symbols</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.elf_symbol"><code class="docutils literal notranslate"><span class="pre">elf_symbol</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.file"><code class="docutils literal notranslate"><span class="pre">elf_symbol.file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.name"><code class="docutils literal notranslate"><span class="pre">elf_symbol.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.section"><code class="docutils literal notranslate"><span class="pre">elf_symbol.section</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.index"><code class="docutils literal notranslate"><span class="pre">elf_symbol.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.info"><code class="docutils literal notranslate"><span class="pre">elf_symbol.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.description"><code class="docutils literal notranslate"><span class="pre">elf_symbol.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.stb"><code class="docutils literal notranslate"><span class="pre">elf_symbol.stb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.stb_description"><code class="docutils literal notranslate"><span class="pre">elf_symbol.stb_description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.fields"><code class="docutils literal notranslate"><span class="pre">elf_symbol.fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.data"><code class="docutils literal notranslate"><span class="pre">elf_symbol.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.data_hex"><code class="docutils literal notranslate"><span class="pre">elf_symbol.data_hex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_symbol.relocations"><code class="docutils literal notranslate"><span class="pre">elf_symbol.relocations</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lists-of-elf-classes">Lists of ELF classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.elf_list"><code class="docutils literal notranslate"><span class="pre">elf_list</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_list.to_dict_list"><code class="docutils literal notranslate"><span class="pre">elf_list.to_dict_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_list.to_html"><code class="docutils literal notranslate"><span class="pre">elf_list.to_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.elf_list.to_markdown"><code class="docutils literal notranslate"><span class="pre">elf_list.to_markdown()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.relocation_list"><code class="docutils literal notranslate"><span class="pre">relocation_list</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.relocation_list.to_dict_list"><code class="docutils literal notranslate"><span class="pre">relocation_list.to_dict_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.relocation_list.to_html"><code class="docutils literal notranslate"><span class="pre">relocation_list.to_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.relocation_list.to_markdown"><code class="docutils literal notranslate"><span class="pre">relocation_list.to_markdown()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.section_list"><code class="docutils literal notranslate"><span class="pre">section_list</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.section_list.to_dict_list"><code class="docutils literal notranslate"><span class="pre">section_list.to_dict_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.section_list.to_html"><code class="docutils literal notranslate"><span class="pre">section_list.to_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.section_list.to_markdown"><code class="docutils literal notranslate"><span class="pre">section_list.to_markdown()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pelfy.symbol_list"><code class="docutils literal notranslate"><span class="pre">symbol_list</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.symbol_list.to_dict_list"><code class="docutils literal notranslate"><span class="pre">symbol_list.to_dict_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.symbol_list.to_html"><code class="docutils literal notranslate"><span class="pre">symbol_list.to_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pelfy.symbol_list.to_markdown"><code class="docutils literal notranslate"><span class="pre">symbol_list.to_markdown()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyhoff</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Functions and classes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="functions-and-classes">
+<h1>Functions and classes<a class="headerlink" href="#functions-and-classes" title="Link to this heading"></a></h1>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pelfy.open_elf_file">
+<span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">open_elf_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.open_elf_file" title="Link to this definition"></a></dt>
+<dd><p>Reads ELF data from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – path of the ELF file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#pelfy.elf_file" title="pelfy.elf_file"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_file</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>elf_file object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="elf-classes">
+<h2>ELF classes<a class="headerlink" href="#elf-classes" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.elf_file">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">elf_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_file" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for representing data of an ELF file in a structured form</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.byteorder">
+<span class="sig-name descname"><span class="pre">byteorder</span></span><a class="headerlink" href="#pelfy.elf_file.byteorder" title="Link to this definition"></a></dt>
+<dd><p>Byte order of the architecture ‘little’ or ‘big’
+(based on e_ident[EI_DATA])</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.bit_width">
+<span class="sig-name descname"><span class="pre">bit_width</span></span><a class="headerlink" href="#pelfy.elf_file.bit_width" title="Link to this definition"></a></dt>
+<dd><p>Bit with of the architecture: 32 or 64 (based on
+e_ident[EI_CLASS])</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.architecture">
+<span class="sig-name descname"><span class="pre">architecture</span></span><a class="headerlink" href="#pelfy.elf_file.architecture" title="Link to this definition"></a></dt>
+<dd><p>Name of the architecture (based on e_machine)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#pelfy.elf_file.fields" title="Link to this definition"></a></dt>
+<dd><p>All ELF header fields as dict</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.sections">
+<span class="sig-name descname"><span class="pre">sections</span></span><a class="headerlink" href="#pelfy.elf_file.sections" title="Link to this definition"></a></dt>
+<dd><p>A list of all ELF sections</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.symbols">
+<span class="sig-name descname"><span class="pre">symbols</span></span><a class="headerlink" href="#pelfy.elf_file.symbols" title="Link to this definition"></a></dt>
+<dd><p>A list of all ELF symbols</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.functions">
+<span class="sig-name descname"><span class="pre">functions</span></span><a class="headerlink" href="#pelfy.elf_file.functions" title="Link to this definition"></a></dt>
+<dd><p>A list of all function symbols (STT_FUNC)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><a class="headerlink" href="#pelfy.elf_file.objects" title="Link to this definition"></a></dt>
+<dd><p>A list of all variable/object symbols (STT_OBJECT)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.code_relocations">
+<span class="sig-name descname"><span class="pre">code_relocations</span></span><a class="headerlink" href="#pelfy.elf_file.code_relocations" title="Link to this definition"></a></dt>
+<dd><p>A list of all code relocations (.rela.text and .rel.text)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.symbol_table_section">
+<span class="sig-name descname"><span class="pre">symbol_table_section</span></span><a class="headerlink" href="#pelfy.elf_file.symbol_table_section" title="Link to this definition"></a></dt>
+<dd><p>The symbol table section (first section with
+the type SHT_SYMTAB)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_file.string_table_section">
+<span class="sig-name descname"><span class="pre">string_table_section</span></span><a class="headerlink" href="#pelfy.elf_file.string_table_section" title="Link to this definition"></a></dt>
+<dd><p>The string table section (first section with
+the name .strtab)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_file.get_relocations">
+<span class="sig-name descname"><span class="pre">get_relocations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reloc_section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_file.get_relocations" title="Link to this definition"></a></dt>
+<dd><p>List relocations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reloc_section</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#pelfy.elf_section" title="pelfy.elf_section"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_section</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Specifies the relocation section from which the
+relocations should be listed. It can be provided as
+elf_section object or by its name. If not provided
+(reloc_section=None) relocations from all relocation
+sections are returned.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#pelfy.relocation_list" title="pelfy.relocation_list"><code class="xref py py-class docutils literal notranslate"><span class="pre">relocation_list</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of relocations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_file.read_bytes">
+<span class="sig-name descname"><span class="pre">read_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_file.read_bytes" title="Link to this definition"></a></dt>
+<dd><p>Read bytes from ELF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>offset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Specify first byte relative to the start of
+the ELF file.</p></li>
+<li><p><strong>num_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Specify the number of bytes to read.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Binary data as bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_file.read_int">
+<span class="sig-name descname"><span class="pre">read_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_file.read_int" title="Link to this definition"></a></dt>
+<dd><p>Read an integer from the ELF file. Byte order is
+selected according to the architecture (e_ident[EI_DATA]).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>offset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Specify first byte of the integer relative to
+the start of the ELF file.</p></li>
+<li><p><strong>num_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Specify the size of the integer in bytes.</p></li>
+<li><p><strong>signed</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Select if the integer is a signed integer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Integer value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_file.read_string">
+<span class="sig-name descname"><span class="pre">read_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_file.read_string" title="Link to this definition"></a></dt>
+<dd><p>Read a zero-terminated text string from the ELF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>offset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Specify first byte of the string relative to
+the start of the ELF file.</p></li>
+<li><p><strong>encoding</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Encoding used for text decoding.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Text string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.elf_list">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">elf_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">_T</span></code>]</p>
+<p>A generic class for representing a list of ELF data items</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">_T</span></code>)]</span>) – Iterable of ELF data items</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_list.to_dict_list">
+<span class="sig-name descname"><span class="pre">to_dict_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list.to_dict_list" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to a list of dicts. It can be used with pandas:
+df = pandas.DataFrame(elements.to_dict_list())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_list.to_html">
+<span class="sig-name descname"><span class="pre">to_html</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list.to_html" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HTML table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_list.to_markdown">
+<span class="sig-name descname"><span class="pre">to_markdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list.to_markdown" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Markdown table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.elf_relocation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">elf_relocation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relocation_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sh_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_relocation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for representing data of a relocation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.file">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#pelfy.elf_relocation.file" title="Link to this definition"></a></dt>
+<dd><p>Points to the parent ELF file object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#pelfy.elf_relocation.index" title="Link to this definition"></a></dt>
+<dd><p>Absolut index of the relocation in the associated relocation section</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.symbol">
+<span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#pelfy.elf_relocation.symbol" title="Link to this definition"></a></dt>
+<dd><p>Symbol to relocate</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pelfy.elf_relocation.type" title="Link to this definition"></a></dt>
+<dd><p>Type of the relocation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.calculation">
+<span class="sig-name descname"><span class="pre">calculation</span></span><a class="headerlink" href="#pelfy.elf_relocation.calculation" title="Link to this definition"></a></dt>
+<dd><p>Description of the relocation calculation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.bits">
+<span class="sig-name descname"><span class="pre">bits</span></span><a class="headerlink" href="#pelfy.elf_relocation.bits" title="Link to this definition"></a></dt>
+<dd><p>number ob bits to patch by the relocation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.target_section">
+<span class="sig-name descname"><span class="pre">target_section</span></span><a class="headerlink" href="#pelfy.elf_relocation.target_section" title="Link to this definition"></a></dt>
+<dd><p>Pointing to the section where this relocation applies to</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_relocation.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#pelfy.elf_relocation.fields" title="Link to this definition"></a></dt>
+<dd><p>All relocation header fields as dict</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.elf_section">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">elf_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_section" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for representing data of an ELF section</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_section.file">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#pelfy.elf_section.file" title="Link to this definition"></a></dt>
+<dd><p>Points to the parent ELF file object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_section.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pelfy.elf_section.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the section</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_section.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#pelfy.elf_section.index" title="Link to this definition"></a></dt>
+<dd><p>Absolut index of the section</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_section.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pelfy.elf_section.type" title="Link to this definition"></a></dt>
+<dd><p>Type of the section</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_section.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#pelfy.elf_section.description" title="Link to this definition"></a></dt>
+<dd><p>Description of the section type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_section.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#pelfy.elf_section.fields" title="Link to this definition"></a></dt>
+<dd><p>All symbol header fields as dict</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pelfy.elf_section.data">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#pelfy.elf_section.data" title="Link to this definition"></a></dt>
+<dd><p>Returns the binary data from the section.
+The offset in the ELF file is given by: section.sh_offset</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pelfy.elf_section.data_hex">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_hex</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pelfy.elf_section.data_hex" title="Link to this definition"></a></dt>
+<dd><p>Returns the binary data from the section as hex string.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pelfy.elf_section.symbols">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbols</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pelfy.symbol_list" title="pelfy.symbol_list"><span class="pre">symbol_list</span></a></em><a class="headerlink" href="#pelfy.elf_section.symbols" title="Link to this definition"></a></dt>
+<dd><p>All ELF symbols associated with this section</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.elf_symbol">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">elf_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_symbol" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for representing data of an ELF symbol</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.file">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#pelfy.elf_symbol.file" title="Link to this definition"></a></dt>
+<dd><p>Points to the parent ELF file object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pelfy.elf_symbol.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the symbol</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.section">
+<span class="sig-name descname"><span class="pre">section</span></span><a class="headerlink" href="#pelfy.elf_symbol.section" title="Link to this definition"></a></dt>
+<dd><p>section where the symbol data is placed</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#pelfy.elf_symbol.index" title="Link to this definition"></a></dt>
+<dd><p>Absolut index in the symbol table</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.info">
+<span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#pelfy.elf_symbol.info" title="Link to this definition"></a></dt>
+<dd><p>Type of the symbol</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#pelfy.elf_symbol.description" title="Link to this definition"></a></dt>
+<dd><p>Description of the symbol type</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.stb">
+<span class="sig-name descname"><span class="pre">stb</span></span><a class="headerlink" href="#pelfy.elf_symbol.stb" title="Link to this definition"></a></dt>
+<dd><p>visibility of the symbol (local, global, etc.)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.stb_description">
+<span class="sig-name descname"><span class="pre">stb_description</span></span><a class="headerlink" href="#pelfy.elf_symbol.stb_description" title="Link to this definition"></a></dt>
+<dd><p>Description of the symbol visibility</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#pelfy.elf_symbol.fields" title="Link to this definition"></a></dt>
+<dd><p>All symbol header fields as dict</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.data">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#pelfy.elf_symbol.data" title="Link to this definition"></a></dt>
+<dd><p>Returns the binary data the symbol is pointing to.
+The offset in the ELF file is calculated by:
+sections[symbol.st_shndx].sh_offset + symbol.st_value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.data_hex">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_hex</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pelfy.elf_symbol.data_hex" title="Link to this definition"></a></dt>
+<dd><p>Returns the binary data the symbol is pointing to as hex string.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pelfy.elf_symbol.relocations">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">relocations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pelfy.relocation_list" title="pelfy.relocation_list"><span class="pre">relocation_list</span></a></em><a class="headerlink" href="#pelfy.elf_symbol.relocations" title="Link to this definition"></a></dt>
+<dd><p>Relocations that are pointing to this symbol.
+The symbol section must be of type SHT_PROGBITS (program code). Therefore
+this property returns typically all relocations that will be
+applied to the function represented by the symbol.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="lists-of-elf-classes">
+<h2>Lists of ELF classes<a class="headerlink" href="#lists-of-elf-classes" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.elf_list">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">elf_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">_T</span></code>]</p>
+<p>A generic class for representing a list of ELF data items</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">_T</span></code>)]</span>) – Iterable of ELF data items</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_list.to_dict_list">
+<span class="sig-name descname"><span class="pre">to_dict_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list.to_dict_list" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to a list of dicts. It can be used with pandas:
+df = pandas.DataFrame(elements.to_dict_list())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_list.to_html">
+<span class="sig-name descname"><span class="pre">to_html</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list.to_html" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HTML table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.elf_list.to_markdown">
+<span class="sig-name descname"><span class="pre">to_markdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.elf_list.to_markdown" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Markdown table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.relocation_list">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">relocation_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.relocation_list" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pelfy.elf_list" title="pelfy.elf_list"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_list</span></code></a>[<a class="reference internal" href="#pelfy.elf_relocation" title="pelfy.elf_relocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_relocation</span></code></a>]</p>
+<p>A class for representing a list of ELF relocations</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.relocation_list.to_dict_list">
+<span class="sig-name descname"><span class="pre">to_dict_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.relocation_list.to_dict_list" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to a list of dicts. It can be used with pandas:
+df = pandas.DataFrame(elements.to_dict_list())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.relocation_list.to_html">
+<span class="sig-name descname"><span class="pre">to_html</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.relocation_list.to_html" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HTML table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.relocation_list.to_markdown">
+<span class="sig-name descname"><span class="pre">to_markdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.relocation_list.to_markdown" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Markdown table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.section_list">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">section_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.section_list" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pelfy.elf_list" title="pelfy.elf_list"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_list</span></code></a>[<a class="reference internal" href="#pelfy.elf_section" title="pelfy.elf_section"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_section</span></code></a>]</p>
+<p>A class for representing a list of ELF section</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.section_list.to_dict_list">
+<span class="sig-name descname"><span class="pre">to_dict_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.section_list.to_dict_list" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to a list of dicts. It can be used with pandas:
+df = pandas.DataFrame(elements.to_dict_list())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.section_list.to_html">
+<span class="sig-name descname"><span class="pre">to_html</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.section_list.to_html" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HTML table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.section_list.to_markdown">
+<span class="sig-name descname"><span class="pre">to_markdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.section_list.to_markdown" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Markdown table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pelfy.symbol_list">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pelfy.</span></span><span class="sig-name descname"><span class="pre">symbol_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.symbol_list" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pelfy.elf_list" title="pelfy.elf_list"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_list</span></code></a>[<a class="reference internal" href="#pelfy.elf_symbol" title="pelfy.elf_symbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">elf_symbol</span></code></a>]</p>
+<p>A class for representing a list of ELF symbols</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.symbol_list.to_dict_list">
+<span class="sig-name descname"><span class="pre">to_dict_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.symbol_list.to_dict_list" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to a list of dicts. It can be used with pandas:
+df = pandas.DataFrame(elements.to_dict_list())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.symbol_list.to_html">
+<span class="sig-name descname"><span class="pre">to_html</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.symbol_list.to_html" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HTML table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pelfy.symbol_list.to_markdown">
+<span class="sig-name descname"><span class="pre">to_markdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pelfy.symbol_list.to_markdown" title="Link to this definition"></a></dt>
+<dd><p>Exporting the ELF item data table to markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Markdown table</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="readme.html" class="btn btn-neutral float-left" title="pelfy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Nicolas Kruse.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

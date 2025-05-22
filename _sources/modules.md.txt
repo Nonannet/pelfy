@@ -1,0 +1,93 @@
+# Functions and classes
+
+## Functions
+
+```{eval-rst}
+.. autofunction:: pelfy.open_elf_file
+```
+
+## ELF classes
+
+```{eval-rst}
+.. autoclass:: pelfy.elf_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+```{eval-rst}
+.. autoclass:: pelfy.elf_list
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+```{eval-rst}
+.. autoclass:: pelfy.elf_relocation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+```{eval-rst}
+.. autoclass:: pelfy.elf_section
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+```{eval-rst}
+.. autoclass:: pelfy.elf_symbol
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+## Lists of ELF classes
+
+```{eval-rst}
+.. autoclass:: pelfy.elf_list
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+```{eval-rst}
+.. autoclass:: pelfy.relocation_list
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+```{eval-rst}
+.. autoclass:: pelfy.section_list
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+
+```{eval-rst}
+.. autoclass:: pelfy.symbol_list
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
+   :exclude-members: select
+```
+

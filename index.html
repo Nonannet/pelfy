@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pelfy &mdash; pyhoff  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pelfy" href="readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            pyhoff
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pelfy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Functions and classes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pyhoff</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pelfy</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pelfy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#developer-guide">Developer Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Functions and classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#elf-classes">ELF classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#lists-of-elf-classes">Lists of ELF classes</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="pelfy">
+<h1>pelfy<a class="headerlink" href="#pelfy" title="Link to this heading"></a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p>Pelfy (Python Executable and Linkable Format analyzer) is an ELF parser written
+in python. It shows header fields, sections, symbols and relocation and gives
+access to all raw data as well as human readable representations.</p>
+<section id="key-features">
+<h3>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Provide names for fields and values as well as descriptions</p></li>
+<li><p>Relocation types for x86, MIPS, ARM and RISC-V all in 32 and 64 bit</p></li>
+<li><p>Outputs tables in nicely formatted HTML, markdown or text</p></li>
+<li><p>Uses HTML outputs for Jupyter Notebook integration</p></li>
+<li><p>Compact code base</p></li>
+<li><p>Pure fully static typed python and no other dependencies</p></li>
+</ul>
+</section>
+<section id="usage-scenarios">
+<h3>Usage Scenarios<a class="headerlink" href="#usage-scenarios" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Reverse engineering tools</p></li>
+<li><p>Testing</p></li>
+<li><p>Documentation</p></li>
+</ul>
+</section>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>The package has no additional dependencies. It can be installed with pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pelfy
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>Example code and its outputs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pelfy</span>
+
+<span class="n">elf</span> <span class="o">=</span> <span class="n">pelfy</span><span class="o">.</span><span class="n">open_elf_file</span><span class="p">(</span><span class="s1">&#39;tests/obj/test-c-riscv64-linux-gnu-gcc-12-O3.o&#39;</span><span class="p">)</span>
+<span class="n">elf</span><span class="o">.</span><span class="n">sections</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>index</p></th>
+<th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>0</p></td>
+<td><p></p></td>
+<td><p>SHT_NULL</p></td>
+<td><p>Section header table entry unused</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>1</p></td>
+<td><p>.text</p></td>
+<td><p>SHT_PROGBITS</p></td>
+<td><p>Program data</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>2</p></td>
+<td><p>.rela.text</p></td>
+<td><p>SHT_RELA</p></td>
+<td><p>Relocation entries with addends</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td><p>.data</p></td>
+<td><p>SHT_PROGBITS</p></td>
+<td><p>Program data</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td><p>.bss</p></td>
+<td><p>SHT_NOBITS</p></td>
+<td><p>Program space with no data (bss)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>5</p></td>
+<td><p>.comment</p></td>
+<td><p>SHT_PROGBITS</p></td>
+<td><p>Program data</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>6</p></td>
+<td><p>.note.GNU-stack</p></td>
+<td><p>SHT_PROGBITS</p></td>
+<td><p>Program data</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>7</p></td>
+<td><p>.riscv.attributes</p></td>
+<td><p>0x70000003</p></td>
+<td><p>Application-specific</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>8</p></td>
+<td><p>.symtab</p></td>
+<td><p>SHT_SYMTAB</p></td>
+<td><p>Symbol table</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>9</p></td>
+<td><p>.strtab</p></td>
+<td><p>SHT_STRTAB</p></td>
+<td><p>String table</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>10</p></td>
+<td><p>.shstrtab</p></td>
+<td><p>SHT_STRTAB</p></td>
+<td><p>String table</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">elf</span><span class="o">.</span><span class="n">functions</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>index</p></th>
+<th class="head"><p>name</p></th>
+<th class="head"><p>info</p></th>
+<th class="head text-right"><p>size</p></th>
+<th class="head"><p>stb</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>11</p></td>
+<td><p>result_float</p></td>
+<td><p>STT_FUNC</p></td>
+<td class="text-right"><p>8</p></td>
+<td><p>STB_GLOBAL</p></td>
+<td><p>Symbol is a code object</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>12</p></td>
+<td><p>result_float_float</p></td>
+<td><p>STT_FUNC</p></td>
+<td class="text-right"><p>12</p></td>
+<td><p>STB_GLOBAL</p></td>
+<td><p>Symbol is a code object</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>13</p></td>
+<td><p>add_float_float</p></td>
+<td><p>STT_FUNC</p></td>
+<td class="text-right"><p>12</p></td>
+<td><p>STB_GLOBAL</p></td>
+<td><p>Symbol is a code object</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>14</p></td>
+<td><p>mul_float_float</p></td>
+<td><p>STT_FUNC</p></td>
+<td class="text-right"><p>12</p></td>
+<td><p>STB_GLOBAL</p></td>
+<td><p>Symbol is a code object</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>15</p></td>
+<td><p>read_float</p></td>
+<td><p>STT_FUNC</p></td>
+<td class="text-right"><p>16</p></td>
+<td><p>STB_GLOBAL</p></td>
+<td><p>Symbol is a code object</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">elf</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s1">&#39;read_float&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">relocations</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>index</p></th>
+<th class="head"><p>symbol name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>calculation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td><p>.LANCHOR0</p></td>
+<td><p>R_RISCV_PCREL_HI20</p></td>
+<td><p>S + A - P</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>5</p></td>
+<td><p></p></td>
+<td><p>R_RISCV_RELAX</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>6</p></td>
+<td><p>.L0</p></td>
+<td><p>R_RISCV_PCREL_LO12_I</p></td>
+<td><p>S - P</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>7</p></td>
+<td><p></p></td>
+<td><p>R_RISCV_RELAX</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>8</p></td>
+<td><p>result_float_float</p></td>
+<td><p>R_RISCV_CALL_PLT</p></td>
+<td><p>S + A - P</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>9</p></td>
+<td><p></p></td>
+<td><p>R_RISCV_RELAX</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>Contributions are welcome! Please open an issue or submit a pull request on GitHub.</p>
+</section>
+<section id="developer-guide">
+<h2>Developer Guide<a class="headerlink" href="#developer-guide" title="Link to this heading"></a></h2>
+<p>To get started with developing the <code class="docutils literal notranslate"><span class="pre">pelfy</span></code> package, follow these steps:</p>
+<p>First, clone the repository to your local machine using Git:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Nonannet/pelfy.git
+<span class="nb">cd</span><span class="w"> </span>pelfy
+</pre></div>
+</div>
+<p>Install the package while keeping files in the current dev directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Install pytest (unit testing), mypy (type checking) and flake8 (style guide checking):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pytest<span class="w"> </span>mypy<span class="w"> </span>flake8
+</pre></div>
+</div>
+<p>Ensure that everything is set up correctly by running the tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+<p>For creating additional test object files place the source c-files in the <code class="docutils literal notranslate"><span class="pre">tests/src/</span></code> directory,
+change the current directory to <code class="docutils literal notranslate"><span class="pre">tests/src/</span></code> and run <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">run_cross_compilation.sh</span></code>. This
+script uses a docker container to cross compile all c-files to object files and outputs
+them in the tests/obj directory.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p>This project is licensed under the MIT License - see the <a class="reference internal" href="#LICENSE"><span class="xref myst">LICENSE</span></a> file for details.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="readme.html" class="btn btn-neutral float-right" title="pelfy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Nicolas Kruse.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

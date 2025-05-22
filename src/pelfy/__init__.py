@@ -320,7 +320,7 @@ class section_list(elf_list[elf_section]):
     def _compact_table(self) -> tuple[list[str], list[list[Union[str, int]]], list[str]]:
         columns = ['index', 'name', 'type', 'description']
         data: list[list[Union[str, int]]] = [[item.index, item.name, item.type,
-                                       item.description] for item in self]
+                                             item.description] for item in self]
         return columns, data, ['index']
 
 
@@ -330,7 +330,7 @@ class symbol_list(elf_list[elf_symbol]):
     def _compact_table(self) -> tuple[list[str], list[list[Union[str, int]]], list[str]]:
         columns = ['index', 'name', 'info', 'size', 'stb', 'section', 'description']
         data: list[list[Union[str, int]]] = [[item.index, item.name, item.info, item.fields['st_size'],
-                                       item.stb, item.section.name if item.section else '', item.description] for item in self]
+                                              item.stb, item.section.name if item.section else '', item.description] for item in self]
         return columns, data, ['index', 'size']
 
 
@@ -340,7 +340,7 @@ class relocation_list(elf_list[elf_relocation]):
     def _compact_table(self) -> tuple[list[str], list[list[Union[str, int]]], list[str]]:
         columns = ['index', 'symbol name', 'type', 'calculation', 'bits']
         data: list[list[Union[str, int]]] = [[item.index, item.symbol.name, item.type,
-                                        item.calculation, item.bits] for item in self]
+                                              item.calculation, item.bits] for item in self]
         return columns, data, ['index', 'bits']
 
 

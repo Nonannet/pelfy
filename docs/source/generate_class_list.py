@@ -3,6 +3,7 @@ import inspect
 import fnmatch
 from io import TextIOWrapper
 
+
 def write_classes(f: TextIOWrapper, patterns: list[str], module_name: str, title: str, description: str = '', exclude: list[str] = []) -> None:
 
     module = importlib.import_module(module_name)

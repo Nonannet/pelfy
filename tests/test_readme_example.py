@@ -1,5 +1,6 @@
 import pelfy
 
+
 def test_readme_example() -> None:
     elf = pelfy.open_elf_file('tests/obj/test-c-riscv64-linux-gnu-gcc-12-O3.o')
 

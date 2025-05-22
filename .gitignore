@@ -45,3 +45,7 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+# docs
+docs/build/
+docs/source/modules.md

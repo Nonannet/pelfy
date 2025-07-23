@@ -164,7 +164,7 @@ class elf_section():
     def symbols(self) -> 'symbol_list':
         """All ELF symbols associated with this section
         """
-        return symbol_list(self.file._list_symbols(self.index))
+        return symbol_list(self.file.list_symbols(self.index))
 
     @property
     def data_hex(self) -> str:
@@ -403,7 +403,7 @@ class elf_file:
         ret_sections = [sh for sh in self.sections if sh.name == '.strtab']
         self.string_table_section = ret_sections[0] if ret_sections else None
 
-        self.symbols = symbol_list(self._list_symbols())
+        self.symbols = symbol_list(self.list_symbols())
 
         self.functions = symbol_list(s for s in self.symbols if s.info == 'STT_FUNC')
         self.objects = symbol_list(s for s in self.symbols if s.info == 'STT_OBJECT')
@@ -415,7 +415,15 @@ class elf_file:
             offs = self.fields['e_shoff'] + i * self.fields['e_shentsize']
             yield {fn: self._read_from_sh_field(offs, fn) for fn in fdat.section_header.keys()}
 
-    def _list_symbols(self, section_index: Optional[int] = None) -> Generator[elf_symbol, None, None]:
+    def list_symbols(self, section_index: Optional[int] = None) -> Generator[elf_symbol, None, None]:
+        """List ELF symbols.
+
+        Args:
+            section_index: If provided, only symbols from the specified section are returned.
+
+        Returns:
+            List of ELF symbols
+        """
         if self.symbol_table_section:
             offs = self.symbol_table_section['sh_offset']
 

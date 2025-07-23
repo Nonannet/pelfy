@@ -371,7 +371,7 @@ class elf_file:
             data: binary ELF data
         """
         assert isinstance(data, (bytes, bytearray)), 'Binary ELF data must be provided as bytes or bytearray.'
-        self._data = data
+        self._data = bytes(data)
 
         # Defaults required for function _read_int_from_elf_field
         self.bit_width = 32

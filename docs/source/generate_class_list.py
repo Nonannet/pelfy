@@ -65,7 +65,7 @@ def write_dochtree(f: TextIOWrapper, title: str, items: list[str]):
     f.write('```{toctree}\n')
     f.write(':maxdepth: 1\n')
     f.write(f':caption: {title}:\n')
-    #f.write(':hidden:\n')
+    # f.write(':hidden:\n')
     for text in items:
         if not text.startswith('_'):
             f.write(f"{text}\n")
@@ -84,4 +84,3 @@ if __name__ == "__main__":
         write_classes(f, ['*'], 'pelfy', title='ELF Classes', exclude=['elf_list', 'relocation_list', 'section_list', 'symbol_list'],)
 
         write_classes(f, ['*_list'], 'pelfy', title='ELF Lists')
-

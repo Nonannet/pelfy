@@ -49,4 +49,4 @@ dmypy.json
 
 # docs
 docs/build/
-docs/source/modules.md
+docs/source/api/

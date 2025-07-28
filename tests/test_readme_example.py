@@ -1,8 +1,8 @@
-import pelfy
+import pelfy._main as _main
 
 
 def test_readme_example() -> None:
-    elf = pelfy.open_elf_file('tests/obj/test-c-riscv64-linux-gnu-gcc-12-O3.o')
+    elf = _main.open_elf_file('tests/obj/test-c-riscv64-linux-gnu-gcc-12-O3.o')
 
     assert ' description ' in elf.sections.to_markdown()
     assert ' stb ' in elf.functions.to_markdown()

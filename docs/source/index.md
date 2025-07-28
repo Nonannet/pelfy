@@ -1,9 +1,8 @@
 ```{toctree}
-:maxdepth: 2
-:caption: Contents:
-
-readme
-modules
+:maxdepth: 1
+:hidden:
+api/index
+repo
 ```
 
 ```{include} ../../README.md

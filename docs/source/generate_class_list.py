@@ -1,60 +1,87 @@
+# This script generates the source md-files for all classes and functions for the docs
+
 import importlib
 import inspect
 import fnmatch
 from io import TextIOWrapper
+import os
+
+
+def write_manual(f: TextIOWrapper, doc_files: list[str], title: str) -> None:
+    write_dochtree(f, title, doc_files)
 
 
 def write_classes(f: TextIOWrapper, patterns: list[str], module_name: str, title: str, description: str = '', exclude: list[str] = []) -> None:
-
+    """Write the classes to the file."""
     module = importlib.import_module(module_name)
 
     classes = [
         name for name, obj in inspect.getmembers(module, inspect.isclass)
-        if (obj.__module__ == module_name and
-            any(fnmatch.fnmatch(name, pat) for pat in patterns if pat not in exclude) and
+        if (any(fnmatch.fnmatch(name, pat) for pat in patterns if name not in exclude) and
             obj.__doc__ and '(Automatic generated stub)' not in obj.__doc__)
     ]
 
-    """Write the classes to the file."""
-    f.write(f'## {title}\n\n')
     if description:
         f.write(f'{description}\n\n')
 
+    write_dochtree(f, title, classes)
+
     for cls in classes:
-        f.write('```{eval-rst}\n')
-        f.write(f'.. autoclass:: {module_name}.{cls}\n')
-        f.write('   :members:\n')
-        f.write('   :undoc-members:\n')
-        f.write('   :show-inheritance:\n')
-        f.write('   :inherited-members:\n')
-        if title != 'Base classes':
-            f.write('   :exclude-members: select\n')
-        f.write('```\n\n')
+        with open(f'docs/source/api/{cls}.md', 'w') as f2:
+            f2.write(f'# {module_name}.{cls}\n')
+            f2.write('```{eval-rst}\n')
+            f2.write(f'.. autoclass:: {module_name}.{cls}\n')
+            f2.write('   :members:\n')
+            f2.write('   :undoc-members:\n')
+            f2.write('   :show-inheritance:\n')
+            f2.write('   :inherited-members:\n')
+            f2.write('```\n\n')
 
 
 def write_functions(f: TextIOWrapper, patterns: list[str], module_name: str, title: str, description: str = '', exclude: list[str] = []) -> None:
-
+    """Write the classes to the file."""
     module = importlib.import_module(module_name)
 
-    classes = [
+    functions = [
         name for name, obj in inspect.getmembers(module, inspect.isfunction)
-        if (obj.__module__ == module_name and
-            any(fnmatch.fnmatch(name, pat) for pat in patterns if pat not in exclude))
+        if (any(fnmatch.fnmatch(name, pat) for pat in patterns if pat not in exclude))
     ]
 
-    """Write the classes to the file."""
-    f.write(f'## {title}\n\n')
     if description:
         f.write(f'{description}\n\n')
 
-    for func in classes:
-        f.write('```{eval-rst}\n')
-        f.write(f'.. autofunction:: {module_name}.{func}\n')
-        f.write('```\n\n')
+    write_dochtree(f, title, functions)
+
+    for func in functions:
+        if not func.startswith('_'):
+            with open(f'docs/source/api/{func}.md', 'w') as f2:
+                f2.write(f'# {module_name}.{func}\n')
+                f2.write('```{eval-rst}\n')
+                f2.write(f'.. autofunction:: {module_name}.{func}\n')
+                f2.write('```\n\n')
 
 
-with open('docs/source/modules.md', 'w') as f:
-    f.write('# Functions and classes\n\n')
-    write_functions(f, ['*'], 'pelfy', title='Functions')
-    write_classes(f, ['elf_*'], 'pelfy', title='ELF classes')
-    write_classes(f, ['*_list'], 'pelfy', title='Lists of ELF classes')
+def write_dochtree(f: TextIOWrapper, title: str, items: list[str]):
+    f.write('```{toctree}\n')
+    f.write(':maxdepth: 1\n')
+    f.write(f':caption: {title}:\n')
+    #f.write(':hidden:\n')
+    for text in items:
+        if not text.startswith('_'):
+            f.write(f"{text}\n")
+    f.write('```\n\n')
+
+
+if __name__ == "__main__":
+    # Ensure the output directory exists
+    os.makedirs('docs/source/api', exist_ok=True)
+
+    with open('docs/source/api/index.md', 'w') as f:
+        f.write('# Classes and functions\n\n')
+
+        write_functions(f, ['*'], 'pelfy', title='Functions')
+
+        write_classes(f, ['*'], 'pelfy', title='ELF Classes', exclude=['elf_list', 'relocation_list', 'section_list', 'symbol_list'],)
+
+        write_classes(f, ['*_list'], 'pelfy', title='ELF Lists')
+

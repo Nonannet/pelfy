@@ -1,4 +1,4 @@
-import pelfy
+import pelfy._main as _main
 import glob
 
 
@@ -11,7 +11,7 @@ def test_simple_c() -> None:
     assert file_list, "No test object files found"
     for path in file_list:
         print(f'Open {path}...')
-        elf = pelfy.open_elf_file(path)
+        elf = _main.open_elf_file(path)
 
         print(elf)
         print(elf.sections)

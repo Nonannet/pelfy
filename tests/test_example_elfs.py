@@ -38,6 +38,13 @@ def test_simple_c() -> None:
         for reloc in elf.get_relocations():
             assert known_name(reloc.type), f"Relocation type {reloc.type} for {elf.architecture} in {path} is unknown."
 
+        assert 'imageWidth' in elf.objects or 'read_float_ret' in elf.objects, path
+        assert 'leet456456456n4ghn4hf56n4f' not in elf.objects
+        assert 0 in elf.objects
+        assert 1000 not in elf.objects
+        assert elf.objects[0] in elf.symbols
+        assert elf.objects[0] not in elf.functions
+
 
 if __name__ == '__main__':
     test_simple_c()

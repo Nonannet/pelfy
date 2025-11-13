@@ -265,6 +265,14 @@ class elf_list(Generic[_T]):
     def __iter__(self) -> Iterator[_T]:
         return iter(self._data)
 
+    def __contains__(self, item: Union[str, int, _T]) -> bool:
+        if isinstance(item, str):
+            return any(getattr(el, 'name', '') == item for el in self._data)
+        elif isinstance(item, int):
+            return 0 <= item < len(self._data)
+        else:
+            return item in self._data
+
     def _compact_table(self) -> tuple[list[str], list[list[Union[str, int]]], list[str]]:
         return [], [[]], []
 

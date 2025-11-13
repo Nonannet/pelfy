@@ -496,17 +496,25 @@ class elf_file:
             ret: dict[str, int] = dict()
 
             if self.bit_width == 32:
-                ret['r_offset'] = self.read_int(el_off, 4)
+                offset = self.read_int(el_off, 4)
                 r_info = self.read_int(el_off + 4, 4)
-                ret['r_info'] = r_info
-                ret['r_addend'] = self.read_int(el_off + 8, 4, True) if sh.type == 'SHT_RELA' else 0
-                yield elf_relocation(self, ret, r_info >> 8, r_info & 0xFF, sh['sh_info'], i)
+                symbol_index = r_info >> 8
+                relocation_type = r_info & 0xFF
+                ret['r_addend'] = self.read_int(el_off + 8, 4, True) \
+                    if sh.type == 'SHT_RELA' else self.read_int(offset, 4, True)
             elif self.bit_width == 64:
-                ret['r_offset'] = self.read_int(el_off, 8)
+                offset = self.read_int(el_off, 8)
                 r_info = self.read_int(el_off + 8, 8)
-                ret['r_info'] = r_info
-                ret['r_addend'] = self.read_int(el_off + 16, 8, True) if sh.type == 'SHT_RELA' else 0
-                yield elf_relocation(self, ret, r_info >> 32, r_info & 0xFFFFFFFF, sh['sh_info'], i)
+                symbol_index = r_info >> 32
+                relocation_type = r_info & 0xFFFFFFFF
+                ret['r_addend'] = self.read_int(el_off + 16, 8, True) \
+                    if sh.type == 'SHT_RELA' else self.read_int(offset, 4, True)
+            else:
+                raise NotImplementedError(f"{self.bit_width} bit is not supported")
+
+            ret['r_offset'] = offset
+            ret['r_info'] = r_info
+            yield elf_relocation(self, ret, symbol_index, relocation_type, sh['sh_info'], i)
 
     def read_bytes(self, offset: int, num_bytes: int) -> bytes:
         """Read bytes from ELF file.

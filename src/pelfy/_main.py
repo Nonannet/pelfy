@@ -491,30 +491,34 @@ class elf_file:
         Returns:
             Relocations from specified elf_section
         """
-        offs = sh['sh_offset']
-        for i, el_off in enumerate(range(offs, sh['sh_size'] + offs, sh['sh_entsize'])):
+        sh_offset = sh['sh_offset']
+        for i, el_off in enumerate(range(sh_offset, sh['sh_size'] + sh_offset, sh['sh_entsize'])):
             ret: dict[str, int] = dict()
 
             if self.bit_width == 32:
-                offset = self.read_int(el_off, 4)
+                r_offset = self.read_int(el_off, 4)
                 r_info = self.read_int(el_off + 4, 4)
                 symbol_index = r_info >> 8
                 relocation_type = r_info & 0xFF
                 ret['r_addend'] = self.read_int(el_off + 8, 4, True) \
-                    if sh.type == 'SHT_RELA' else self.read_int(offset, 4, True)
+                    if sh.type == 'SHT_RELA' else self._get_rel_32bit_addend(r_offset, sh)
             elif self.bit_width == 64:
-                offset = self.read_int(el_off, 8)
+                r_offset = self.read_int(el_off, 8)
                 r_info = self.read_int(el_off + 8, 8)
                 symbol_index = r_info >> 32
                 relocation_type = r_info & 0xFFFFFFFF
                 ret['r_addend'] = self.read_int(el_off + 16, 8, True) \
-                    if sh.type == 'SHT_RELA' else self.read_int(offset, 4, True)
+                    if sh.type == 'SHT_RELA' else self._get_rel_32bit_addend(r_offset, sh)
             else:
                 raise NotImplementedError(f"{self.bit_width} bit is not supported")
 
-            ret['r_offset'] = offset
+            ret['r_offset'] = r_offset
             ret['r_info'] = r_info
             yield elf_relocation(self, ret, symbol_index, relocation_type, sh['sh_info'], i)
+
+    def _get_rel_32bit_addend(self, r_offset: int, reloc_section: elf_section) -> int:
+        sh = self.sections[reloc_section['sh_info']]
+        return self.read_int(r_offset + sh['sh_offset'], 4, True)
 
     def read_bytes(self, offset: int, num_bytes: int) -> bytes:
         """Read bytes from ELF file.

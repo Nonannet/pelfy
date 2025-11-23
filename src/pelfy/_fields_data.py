@@ -406,6 +406,8 @@ relocation_table_types = {
         14: ("R_ARM_THM_SWI8", 8, "S + A"),
         15: ("R_ARM_XPC25", 25, ""),
         16: ("R_ARM_THM_XPC22", 22, ""),
+        28: ("R_ARM_CALL", 24, "((S + A) - P) >> 2"),
+        29: ("R_ARM_JUMP24", 24, "((S + A) - P) >> 2"),
         30: ("R_ARM_TLS_DESC", 0, ""),
         32: ("R_ARM_ALU_PCREL_7_0", 7, "(S - P + A) & 0x000000FF"),
         33: ("R_ARM_ALU_PCREL_15_8", 15, "(S - P + A) & 0x0000FF00"),

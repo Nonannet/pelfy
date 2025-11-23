@@ -501,14 +501,14 @@ class elf_file:
                 symbol_index = r_info >> 8
                 relocation_type = r_info & 0xFF
                 ret['r_addend'] = self.read_int(el_off + 8, 4, True) \
-                    if sh.type == 'SHT_RELA' else self._get_rel_32bit_addend(r_offset, sh)
+                    if sh.type == 'SHT_RELA' else self._get_rel_addend(relocation_type, r_offset, sh)
             elif self.bit_width == 64:
                 r_offset = self.read_int(el_off, 8)
                 r_info = self.read_int(el_off + 8, 8)
                 symbol_index = r_info >> 32
                 relocation_type = r_info & 0xFFFFFFFF
                 ret['r_addend'] = self.read_int(el_off + 16, 8, True) \
-                    if sh.type == 'SHT_RELA' else self._get_rel_32bit_addend(r_offset, sh)
+                    if sh.type == 'SHT_RELA' else self._get_rel_addend(relocation_type, r_offset, sh)
             else:
                 raise NotImplementedError(f"{self.bit_width} bit is not supported")
 
@@ -516,9 +516,36 @@ class elf_file:
             ret['r_info'] = r_info
             yield elf_relocation(self, ret, symbol_index, relocation_type, sh['sh_info'], i)
 
-    def _get_rel_32bit_addend(self, r_offset: int, reloc_section: elf_section) -> int:
-        sh = self.sections[reloc_section['sh_info']]
-        return self.read_int(r_offset + sh['sh_offset'], 4, True)
+    def _get_rel_addend(self, relocation_type: int, r_offset: int, reloc_section: elf_section) -> int:
+        reloc_types = fdat.relocation_table_types.get(self.architecture)
+        if reloc_types and 'A' in reloc_types[relocation_type][2]:
+            name = reloc_types[relocation_type][0]
+            sh = self.sections[reloc_section['sh_info']]
+            field = self.read_int(r_offset + sh['sh_offset'], 4, True)
+            if name in ('R_386_PC32', 'R_386_32', 'R_X86_64_PC32', 'R_X86_64_PLT32', 'R_ARM_REL32', 'R_ARM_ABS32'):
+                return field
+            if name == 'R_ARM_MOVW_ABS_NC':
+                imm4 = (field >> 16) & 0xF
+                imm12 = field & 0xFFF
+                return imm12 | (imm4 << 12)
+            if name == 'R_ARM_MOVT_ABS':
+                imm4 = (field >> 16) & 0xF
+                imm12 = field & 0xFFF
+                return (imm12 << 16) | (imm4 << 28)  # Upper 16 bit
+            if name in ('R_ARM_JUMP24', 'R_ARM_CALL'):
+                imm24 = field & 0xFFFFFF
+                if imm24 & 0x800000:
+                    imm24 |= ~0xFFFFFF
+                return imm24 << 2
+            if '_THM_' in name:
+                print('Warning: Thumb relocation addend extraction is not implemented')
+                return 0
+            if '_MIPS_' in name:
+                print('Warning: MIPS relocations addend extraction is not implemented')
+                return 0
+            raise NotImplementedError(f"Relocation addend extraction for {name} is not implemented")
+
+        return 0
 
     def read_bytes(self, offset: int, num_bytes: int) -> bytes:
         """Read bytes from ELF file.

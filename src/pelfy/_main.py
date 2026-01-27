@@ -38,6 +38,10 @@ class elf_symbol():
         description: Description of the symbol type
         stb: visibility of the symbol (local, global, etc.)
         stb_description: Description of the symbol visibility
+        thumb_mode: Indicate if symbol is a ARM thumb function
+        offset_in_section: Position of first symbol byte
+            relative to section start
+        offset_in_file: Position of first symbol byte in object file
         fields: All symbol header fields as dict
     """
 
@@ -64,6 +68,9 @@ class elf_symbol():
 
         self.info, self.description = fdat.st_info_values[fields['st_info'] & 0x0F]
         self.stb, self.stb_description = fdat.stb_values[fields['st_info'] >> 4]
+        self.thumb_mode = bool((file.architecture == 'EM_ARM') & fields['st_value'] & 1)
+        self.offset_in_section = fields['st_value'] & ~int(self.thumb_mode)
+        self.offset_in_file = self.section['sh_offset'] + self.offset_in_section if self.section else 0
 
     @property
     def data(self) -> bytes:

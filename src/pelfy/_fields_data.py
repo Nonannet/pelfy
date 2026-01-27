@@ -389,18 +389,18 @@ relocation_table_types = {
         33: ("R_AMD64_SIZE64", 64, "Z + A"),
     },
     "EM_ARM": {
-        0:  ("R_ARM_NONE", 0, ""),
+        0: ("R_ARM_NONE", 0, ""),
 
-        1:  ("R_ARM_PC24", 24, "S - P + A"),
-        2:  ("R_ARM_ABS32", 32, "S + A"),
-        3:  ("R_ARM_REL32", 32, "S - P + A"),
-        4:  ("R_ARM_LDR_PC_G0", 12, "S - P + A"),
+        1: ("R_ARM_PC24", 24, "S - P + A"),
+        2: ("R_ARM_ABS32", 32, "S + A"),
+        3: ("R_ARM_REL32", 32, "S - P + A"),
+        4: ("R_ARM_LDR_PC_G0", 12, "S - P + A"),
 
-        5:  ("R_ARM_ABS16", 16, "S + A"),
-        6:  ("R_ARM_ABS12", 12, "S + A"),
-        7:  ("R_ARM_THM_ABS5", 5, "S + A"),
-        8:  ("R_ARM_ABS8", 8, "S + A"),
-        9:  ("R_ARM_SBREL32", 32, "S - B + A"),
+        5: ("R_ARM_ABS16", 16, "S + A"),
+        6: ("R_ARM_ABS12", 12, "S + A"),
+        7: ("R_ARM_THM_ABS5", 5, "S + A"),
+        8: ("R_ARM_ABS8", 8, "S + A"),
+        9: ("R_ARM_SBREL32", 32, "S - B + A"),
 
         10: ("R_ARM_THM_CALL", 22, "S - P + A"),
         11: ("R_ARM_THM_PC8", 8, "S - P + A"),
@@ -415,7 +415,7 @@ relocation_table_types = {
         29: ("R_ARM_JUMP24", 24, "((S + A) - P) >> 2"),
         30: ("R_ARM_THM_JUMP24", 24, "((S + A) - P) >> 1"),
 
-        32: ("R_ARM_ALU_PCREL_7_0", 8,  "(S - P + A) & 0x000000FF"),
+        32: ("R_ARM_ALU_PCREL_7_0", 8, "(S - P + A) & 0x000000FF"),
         33: ("R_ARM_ALU_PCREL_15_8", 8, "(S - P + A) & 0x0000FF00"),
         34: ("R_ARM_ALU_PCREL_23_15", 9, "(S - P + A) & 0x00FF8000"),
 

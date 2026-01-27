@@ -26,7 +26,7 @@ def open_elf_file(file_path: str) -> 'elf_file':
         return elf_file(f.read())
 
 
-def _decode_thumb_branch_imm(field: int, bits: int):
+def _decode_thumb_branch_imm(field: int, bits: int) -> int:
     """
     Decode Thumb-2 wide branch immediate.
     bits: 22 (R_ARM_THM_PC22) or 24 (R_ARM_THM_JUMP24)
@@ -35,10 +35,10 @@ def _decode_thumb_branch_imm(field: int, bits: int):
     h1 = (field >> 16) & 0xFFFF
     h2 = field & 0xFFFF
 
-    S     = (h1 >> 10) & 1
+    S = (h1 >> 10) & 1
     imm10 = h1 & 0x03FF
-    J1    = (h2 >> 13) & 1
-    J2    = (h2 >> 11) & 1
+    J1 = (h2 >> 13) & 1
+    J2 = (h2 >> 11) & 1
     imm11 = h2 & 0x07FF
 
     # Decode J1/J2 → I1/I2

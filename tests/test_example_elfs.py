@@ -38,7 +38,20 @@ def test_simple_c() -> None:
         for reloc in elf.get_relocations():
             assert known_name(reloc.type), f"Relocation type {reloc.type} for {elf.architecture} in {path} is unknown."
 
-        assert 'imageWidth' in elf.objects or 'read_float_ret' in elf.objects, path
+        is_arm = 'arm' in path
+        test_function = elf.functions[-3]
+        assert test_function.section
+        assert is_arm == ('.ARM.attributes' in elf.sections), path  # Is 32 bit ARM
+        assert is_arm == (elf.architecture == 'EM_ARM'), (path, elf.architecture)
+        assert test_function.thumb_mode == ('thumb' in path or 'arm-linux-gnueabihf-gcc-12-O' in path), path
+
+        if test_function.thumb_mode:
+            # In 32 Bit ARM mode the leased segnificant bit in st_value indicates thumb mode
+            assert test_function.offset_in_file == (test_function.fields['st_value'] & ~1) + test_function.section['sh_offset']
+        else:
+            assert test_function.offset_in_file == test_function.fields['st_value'] + test_function.section['sh_offset']
+
+        assert ('imageWidth' in elf.objects) or ('read_float_ret' in elf.objects) or ('pow_int_float' in elf.functions), path
         assert 'leet456456456n4ghn4hf56n4f' not in elf.objects
         assert 0 in elf.objects
         assert 1000 not in elf.objects

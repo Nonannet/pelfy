@@ -26,6 +26,53 @@ def open_elf_file(file_path: str) -> 'elf_file':
         return elf_file(f.read())
 
 
+def _decode_thumb_branch_imm(field: int, bits: int):
+    """
+    Decode Thumb-2 wide branch immediate.
+    bits: 22 (R_ARM_THM_PC22) or 24 (R_ARM_THM_JUMP24)
+    """
+
+    h1 = (field >> 16) & 0xFFFF
+    h2 = field & 0xFFFF
+
+    S     = (h1 >> 10) & 1
+    imm10 = h1 & 0x03FF
+    J1    = (h2 >> 13) & 1
+    J2    = (h2 >> 11) & 1
+    imm11 = h2 & 0x07FF
+
+    # Decode J1/J2 → I1/I2
+    I1 = (~(J1 ^ S)) & 1
+    I2 = (~(J2 ^ S)) & 1
+
+    if bits == 24:
+        imm = (
+            (S << 23) |
+            (I1 << 22) |
+            (I2 << 21) |
+            (imm10 << 11) |
+            (imm11 << 0)
+        )
+        sign_bit = 23
+    else:
+        assert bits == 22
+        imm = (
+            (S << 21) |
+            (I1 << 20) |
+            (I2 << 19) |
+            (imm10 << 9) |
+            (imm11 << 0)
+        )
+        sign_bit = 21
+
+    # Sign extend
+    if imm & (1 << sign_bit):
+        imm |= ~((1 << (sign_bit + 1)) - 1)
+
+    # Thumb branch offsets are halfword aligned
+    return imm << 1
+
+
 class elf_symbol():
     """A class for representing data of an ELF symbol
 
@@ -546,8 +593,12 @@ class elf_file:
                 if imm24 & 0x800000:
                     imm24 |= ~0xFFFFFF
                 return imm24 << 2
+            if name == 'R_ARM_THM_PC22':
+                return _decode_thumb_branch_imm(field, 22)
+            if name in ('R_ARM_THM_JUMP24', 'R_ARM_THM_CALL'):
+                return _decode_thumb_branch_imm(field, 24)
             if '_THM_' in name:
-                print('Warning: Thumb relocation addend extraction is not implemented')
+                print(f'Warning: Thumb relocation addend extraction is for {name} not implemented')
                 return 0
             if '_MIPS_' in name:
                 print('Warning: MIPS relocations addend extraction is not implemented')

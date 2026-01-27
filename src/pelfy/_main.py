@@ -124,15 +124,12 @@ class elf_symbol():
     @property
     def data(self) -> bytes:
         """Returns the binary data the symbol is pointing to.
-        The offset in the ELF file is calculated by:
-        sections[symbol.st_shndx].sh_offset + symbol.st_value
         """
         assert self.section, 'This symbol is not associated to a data section'
         if self.section.type == 'SHT_NOBITS':
             return b'\x00' * self['st_size']
         else:
-            offset = self.section['sh_offset'] + self['st_value']
-            return self.file.read_bytes(offset, self['st_size'])
+            return self.file.read_bytes(self.offset_in_file, self['st_size'])
 
     @property
     def data_hex(self) -> str:
@@ -151,7 +148,7 @@ class elf_symbol():
         assert self.section and self.section.type == 'SHT_PROGBITS'
         for reloc in self.file.get_relocations():
             if reloc.target_section == self.section:
-                offset = reloc['r_offset'] - self['st_value']
+                offset = reloc['r_offset'] - self.offset_in_section
                 if 0 <= offset < self['st_size']:
                     ret.append(reloc)
         return relocation_list(ret)

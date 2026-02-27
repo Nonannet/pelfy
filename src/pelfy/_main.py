@@ -575,7 +575,7 @@ class elf_file:
         if reloc_types and 'A' in reloc_types[relocation_type][2]:
             name = reloc_types[relocation_type][0]
             sh = self.sections[reloc_section['sh_info']]
-            field = self.read_int(r_offset + sh['sh_offset'], 4, True)
+            field = self.read_int(r_offset + sh['sh_offset'], 4, False)
             if name in ('R_386_PC32', 'R_386_32', 'R_X86_64_PC32', 'R_X86_64_PLT32', 'R_ARM_REL32', 'R_ARM_ABS32'):
                 return field
             if name == 'R_ARM_MOVW_ABS_NC':
@@ -595,22 +595,15 @@ class elf_file:
                 return _decode_thumb_branch_imm(field, 22)
             if name in ('R_ARM_THM_JUMP24', 'R_ARM_THM_CALL'):
                 return _decode_thumb_branch_imm(field, 24)
-            if name == 'R_ARM_THM_MOVW_ABS_NC':
-                # Extract addend for Thumb MOVW (lower 16 bits)
-                imm4 = (field >> 16) & 0xF
-                i = (field >> 26) & 0x1
-                imm3 = (field >> 12) & 0x7
-                imm8 = (field >> 0) & 0xFF
-                addend = (i << 11) | (imm4 << 12) | (imm3 << 8) | imm8
-                return addend
-            if name == 'R_ARM_THM_MOVT_ABS':
-                # Extract addend for Thumb MOVT (upper 16 bits)
-                imm4 = (field >> 16) & 0xF
-                i = (field >> 26) & 0x1
-                imm3 = (field >> 12) & 0x7
-                imm8 = (field >> 0) & 0xFF
-                addend = ((i << 11) | (imm4 << 12) | (imm3 << 8) | imm8) << 16
-                return addend
+            if name == 'R_ARM_THM_MOVW_ABS_NC' or name == 'R_ARM_THM_MOVT_ABS':
+                i = (field >> 10) & 1
+                imm4 = field & 0xF
+                imm3 = (field >> 28) & 0x7
+                imm8 = (field >> 16) & 0xFF
+                imm16 = imm8 | (imm3 << 8) | (i << 11) | (imm4 << 12)
+                if name == 'R_ARM_THM_MOVT_ABS':
+                    return imm16 << 16
+                return imm16
             if '_THM_' in name:
                 warnings.warn(f'Thumb relocation addend extraction is for {name} not implemented', stacklevel=2)
                 return 0

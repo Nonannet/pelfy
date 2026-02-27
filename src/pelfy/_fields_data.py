@@ -434,7 +434,7 @@ relocation_table_types = {
         44: ("R_ARM_MOVT_ABS", 16, "S + A"),
 
         47: ("R_ARM_THM_MOVW_ABS_NC", 16, "S + A"),
-        48: ("R_ARM_THM_MOVT_ABS_NC", 16, "S + A"),
+        48: ("R_ARM_THM_MOVT_ABS", 16, "S + A"),
     },
     "EM_AARCH64": {
         0: ("R_AARCH64_NONE", 0, ""),

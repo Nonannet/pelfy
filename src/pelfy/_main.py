@@ -603,7 +603,7 @@ class elf_file:
                 imm8 = (field >> 0) & 0xFF
                 addend = (i << 11) | (imm4 << 12) | (imm3 << 8) | imm8
                 return addend
-            if name == 'R_ARM_THM_MOVT_ABS_NC':
+            if name == 'R_ARM_THM_MOVT_ABS':
                 # Extract addend for Thumb MOVT (upper 16 bits)
                 imm4 = (field >> 16) & 0xF
                 i = (field >> 26) & 0x1

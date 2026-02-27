@@ -9,6 +9,7 @@ Typical usage example:
 from . import _fields_data as fdat
 from . import _output_formatter
 from typing import TypeVar, Literal, Iterable, Generic, Iterator, Generator, Optional, Union
+import warnings
 
 _T = TypeVar('_T')
 
@@ -594,11 +595,27 @@ class elf_file:
                 return _decode_thumb_branch_imm(field, 22)
             if name in ('R_ARM_THM_JUMP24', 'R_ARM_THM_CALL'):
                 return _decode_thumb_branch_imm(field, 24)
+            if name == 'R_ARM_THM_MOVW_ABS_NC':
+                # Extract addend for Thumb MOVW (lower 16 bits)
+                imm4 = (field >> 16) & 0xF
+                i = (field >> 26) & 0x1
+                imm3 = (field >> 12) & 0x7
+                imm8 = (field >> 0) & 0xFF
+                addend = (i << 11) | (imm4 << 12) | (imm3 << 8) | imm8
+                return addend
+            if name == 'R_ARM_THM_MOVT_ABS_NC':
+                # Extract addend for Thumb MOVT (upper 16 bits)
+                imm4 = (field >> 16) & 0xF
+                i = (field >> 26) & 0x1
+                imm3 = (field >> 12) & 0x7
+                imm8 = (field >> 0) & 0xFF
+                addend = ((i << 11) | (imm4 << 12) | (imm3 << 8) | imm8) << 16
+                return addend
             if '_THM_' in name:
-                print(f'Warning: Thumb relocation addend extraction is for {name} not implemented')
+                warnings.warn(f'Thumb relocation addend extraction is for {name} not implemented', stacklevel=2)
                 return 0
             if '_MIPS_' in name:
-                print('Warning: MIPS relocations addend extraction is not implemented')
+                warnings.warn('Warning: MIPS relocations addend extraction is not implemented', stacklevel=2)
                 return 0
             raise NotImplementedError(f"Relocation addend extraction for {name} is not implemented")
 

@@ -1,5 +1,6 @@
 import pelfy._main as _main
 import os
+from typing import Union
 
 
 def test_thumb_addend_extraction() -> None:
@@ -14,7 +15,7 @@ def test_thumb_addend_extraction() -> None:
             reloc_addends.append((reloc.type, reloc['r_offset'], reloc['r_addend'], reloc.symbol.name))
 
     # Reference values from the .asm file (addend = 0 for all Thumb relocations)
-    reference: list[tuple[str, int | None, int, str]] = [
+    reference: list[tuple[str, Union[int, None], int, str]] = [
         ('R_ARM_THM_MOVW_ABS_NC', None, 0, 'dummy_int'),
         ('R_ARM_THM_MOVT_ABS', None, 0, 'dummy_int'),
         ('R_ARM_THM_MOVW_ABS_NC', None, 0, 'dummy_float'),

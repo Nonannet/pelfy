@@ -1,7 +1,8 @@
 import pelfy._main as _main
 import os
 
-def test_arm_addend_extraction():
+
+def test_arm_addend_extraction() -> None:
     # Path to the test object file
     obj_path = os.path.join('tests', 'obj', 'stencils_armv7_O3.o')
     elf = _main.open_elf_file(obj_path)
@@ -59,7 +60,3 @@ def test_arm_addend_extraction():
                 found = True
                 break
         assert found, f"Missing or incorrect addend for {ref_type} offset=0x{ref_offset:X} symbol={ref_symbol} (value={addend}, expected {ref_addend})"
-
-        print(found, f"Missing or incorrect addend for {ref_type} offset=0x{ref_offset:X} symbol={ref_symbol} (value={addend}, expected {ref_addend})")
-
-    assert False

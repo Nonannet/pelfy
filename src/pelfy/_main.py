@@ -589,9 +589,6 @@ class elf_file:
                 if name == 'R_ARM_THM_MOVT_ABS':
                     return imm16 << 16
                 return imm16
-            if '_THM_' in name:
-                warnings.warn(f'Thumb relocation addend extraction is for {name} not implemented', stacklevel=2)
-                return 0
             if '_MIPS_' in name:
                 warnings.warn('Warning: MIPS relocations addend extraction is not implemented', stacklevel=2)
                 return 0

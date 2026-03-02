@@ -9,6 +9,7 @@ Typical usage example:
 from . import _fields_data as fdat
 from . import _output_formatter
 from typing import TypeVar, Literal, Iterable, Generic, Iterator, Generator, Optional, Union
+import warnings
 
 _T = TypeVar('_T')
 
@@ -24,6 +25,14 @@ def open_elf_file(file_path: str) -> 'elf_file':
     """
     with open(file_path, mode='rb') as f:
         return elf_file(f.read())
+
+
+def _sign_extend(value: int, bits: int) -> int:
+    """Sign-extend a value with given bit width to 32 bits."""
+    sign_bit = 1 << (bits - 1)
+    if value & sign_bit:
+        return value - (1 << bits)
+    return value
 
 
 class elf_symbol():
@@ -42,6 +51,7 @@ class elf_symbol():
         offset_in_section: Position of first symbol byte
             relative to section start
         offset_in_file: Position of first symbol byte in object file
+        size: size of symbol in bytes
         fields: All symbol header fields as dict
     """
 
@@ -71,19 +81,17 @@ class elf_symbol():
         self.thumb_mode = bool((file.architecture == 'EM_ARM') & fields['st_value'] & 1)
         self.offset_in_section = fields['st_value'] & ~int(self.thumb_mode)
         self.offset_in_file = self.section['sh_offset'] + self.offset_in_section if self.section else 0
+        self.size = self.fields['st_size']
 
     @property
     def data(self) -> bytes:
         """Returns the binary data the symbol is pointing to.
-        The offset in the ELF file is calculated by:
-        sections[symbol.st_shndx].sh_offset + symbol.st_value
         """
         assert self.section, 'This symbol is not associated to a data section'
         if self.section.type == 'SHT_NOBITS':
             return b'\x00' * self['st_size']
         else:
-            offset = self.section['sh_offset'] + self['st_value']
-            return self.file.read_bytes(offset, self['st_size'])
+            return self.file.read_bytes(self.offset_in_file, self['st_size'])
 
     @property
     def data_hex(self) -> str:
@@ -102,7 +110,7 @@ class elf_symbol():
         assert self.section and self.section.type == 'SHT_PROGBITS'
         for reloc in self.file.get_relocations():
             if reloc.target_section == self.section:
-                offset = reloc['r_offset'] - self['st_value']
+                offset = reloc['r_offset'] - self.offset_in_section
                 if 0 <= offset < self['st_size']:
                     ret.append(reloc)
         return relocation_list(ret)
@@ -528,7 +536,7 @@ class elf_file:
         if reloc_types and 'A' in reloc_types[relocation_type][2]:
             name = reloc_types[relocation_type][0]
             sh = self.sections[reloc_section['sh_info']]
-            field = self.read_int(r_offset + sh['sh_offset'], 4, True)
+            field = self.read_int(r_offset + sh['sh_offset'], 4, False)
             if name in ('R_386_PC32', 'R_386_32', 'R_X86_64_PC32', 'R_X86_64_PLT32', 'R_ARM_REL32', 'R_ARM_ABS32'):
                 return field
             if name == 'R_ARM_MOVW_ABS_NC':
@@ -544,11 +552,45 @@ class elf_file:
                 if imm24 & 0x800000:
                     imm24 |= ~0xFFFFFF
                 return imm24 << 2
-            if '_THM_' in name:
-                print('Warning: Thumb relocation addend extraction is not implemented')
-                return 0
+            if name == 'R_ARM_THM_PC22':
+                # BL Encoding T2
+                h1 = field & 0xFFFF
+                h2 = (field >> 16) & 0xFFFF
+                s = (h1 >> 10) & 0x1  # Bit 10 of h1
+                imm10H = h1 & 0x3FF  # Bits 9..0 of h1
+                j1 = (h2 >> 13) & 0x1  # Bit 13 of h2
+                j2 = (h2 >> 11) & 0x1  # Bit 11 of h2
+                imm10L = (h2 >> 1) & 0x3FF  # Bits 10..1 of h2
+                i1 = ~(j1 ^ s) & 0x1
+                i2 = ~(j2 ^ s) & 0x1
+                imm22 = (s << 21) | (i1 << 20) | (i2 << 19) | (imm10H << 9) | imm10L
+                imm32 = _sign_extend(imm22 << 1, 23)  # Shift left by 1, then sign-extend 23 bits
+                return imm32
+            if name in ('R_ARM_THM_JUMP24', 'R_ARM_THM_CALL'):
+                # B.W Encoding T4
+                h1 = field & 0xFFFF
+                h2 = (field >> 16) & 0xFFFF
+                s = (h1 >> 10) & 0x1  # Bit 10 of h1
+                imm10 = h1 & 0x3FF  # Bits 9..0 of h1
+                j1 = (h2 >> 13) & 0x1  # Bit 13 of h2
+                j2 = (h2 >> 11) & 0x1  # Bit 11 of h2
+                imm11 = h2 & 0x7FF  # Bits 10..0 of h2
+                i1 = ~(j1 ^ s) & 0x1
+                i2 = ~(j2 ^ s) & 0x1
+                imm24 = (s << 23) | (i1 << 22) | (i2 << 21) | (imm10 << 11) | imm11
+                imm32 = _sign_extend(imm24 << 1, 25)  # Shift left by 1, then sign-extend 25 bits
+                return imm32
+            if name == 'R_ARM_THM_MOVW_ABS_NC' or name == 'R_ARM_THM_MOVT_ABS':
+                i = (field >> 10) & 1
+                imm4 = field & 0xF
+                imm3 = (field >> 28) & 0x7
+                imm8 = (field >> 16) & 0xFF
+                imm16 = imm8 | (imm3 << 8) | (i << 11) | (imm4 << 12)
+                if name == 'R_ARM_THM_MOVT_ABS':
+                    return imm16 << 16
+                return imm16
             if '_MIPS_' in name:
-                print('Warning: MIPS relocations addend extraction is not implemented')
+                warnings.warn('Warning: MIPS relocations addend extraction is not implemented', stacklevel=2)
                 return 0
             raise NotImplementedError(f"Relocation addend extraction for {name} is not implemented")
 

@@ -590,5 +590,31 @@ relocation_table_types = {
         64: ("R_RISCV_TLSDESC_ADD_LO12", 0, "S - P"),
         65: ("R_RISCV_TLSDESC_CALL", 0, ""),
         191: ("R_RISCV_VENDOR", 0, "")
+    },
+    "EM_TRICORE": {
+        0: ("R_TRICORE_NONE", 0, ""),
+        1: ("R_TRICORE_32REL", 32, "S + A - P"),
+        2: ("R_TRICORE_32ABS", 32, "S + A"),
+        3: ("R_TRICORE_24REL", 24, "S + A - P"),
+        4: ("R_TRICORE_24ABS", 24, "S + A"),
+        5: ("R_TRICORE_16SM", 16, "S + A - A[0]"),
+        6: ("R_TRICORE_HIADJ", 16, "S + A + 8000H >> 16"),
+        7: ("R_TRICORE_LO", 16, "S + A & FFFFH"),
+        8: ("R_TRICORE_LO2", 16, "S + A & FFFFH"),
+        9: ("R_TRICORE_18ABS", 18, "S + A"),
+        10: ("R_TRICORE_10SM", 10, "S + A - A[0]"),
+        11: ("R_TRICORE_15REL", 15, "S + A - P"),
+        12: ("R_TRICORE_10LI", 10, "S + A - A[1]"),
+        13: ("R_TRICORE_16LI", 16, "S + A - A[1]"),
+        14: ("R_TRICORE_10A8", 10, "S + A - A[8]"),
+        15: ("R_TRICORE_16A8", 16, "S + A - A[8]"),
+        16: ("R_TRICORE_10A9", 10, "S + A - A[9]"),
+        17: ("R_TRICORE_16A9", 16, "S + A - A[9]"),
+        25: ("R_TRICORE_PCPHI", 16, "S + A >> 16"),
+        26: ("R_TRICORE_PCPLO", 16, "S + A & FFFFH"),
+        27: ("R_TRICORE_PCPPAGE", 16, "S + A & FF00H"),
+        28: ("R_TRICORE_PCPOFF", 6, "(S + A >> 2) & 3FH"),
+        29: ("R_TRICORE_PCPTEXT", 16, "(S + A >> 1) & FFFFH"),
+        82: ("R_TRICORE_RELAX", 0, "")
     }
 }

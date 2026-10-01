@@ -82,6 +82,7 @@ class elf_symbol():
         self.offset_in_section = fields['st_value'] & ~int(self.thumb_mode)
         self.offset_in_file = self.section['sh_offset'] + self.offset_in_section if self.section else 0
         self.size = self.fields['st_size']
+        self._relocations: list[elf_relocation] = list()  # Filled by elf_file
 
     @property
     def data(self) -> bytes:
@@ -106,14 +107,8 @@ class elf_symbol():
         this property returns typically all relocations that will be
         applied to the function represented by the symbol.
         """
-        ret: list[elf_relocation] = list()
         assert self.section and self.section.type == 'SHT_PROGBITS'
-        for reloc in self.file.get_relocations():
-            if reloc.target_section == self.section:
-                offset = reloc['r_offset'] - self.offset_in_section
-                if 0 <= offset < self['st_size']:
-                    ret.append(reloc)
-        return relocation_list(ret)
+        return relocation_list(self._relocations)
 
     def __getitem__(self, key: Union[str, int]) -> int:
         if isinstance(key, str):
@@ -432,6 +427,16 @@ class elf_file:
         self.objects = symbol_list(s for s in self.symbols if s.info == 'STT_OBJECT')
 
         self.code_relocations = self.get_relocations(['.rela.text', '.rel.text'])
+
+        # Assign each relocation to the symbols covering its target address
+        section_symbols: dict[int, list[elf_symbol]] = dict()
+        for sym in self.symbols:
+            if sym.section:
+                section_symbols.setdefault(sym.section.index, []).append(sym)
+        for reloc in self.get_relocations():
+            for sym in section_symbols.get(reloc.target_section.index, []):
+                if 0 <= reloc['r_offset'] - sym.offset_in_section < sym.size:
+                    sym._relocations.append(reloc)
 
     def _list_sections(self) -> Generator[dict[str, int], None, None]:
         for i in range(self.fields['e_shnum']):

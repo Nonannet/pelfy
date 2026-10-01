@@ -82,6 +82,7 @@ class elf_symbol():
         self.offset_in_section = fields['st_value'] & ~int(self.thumb_mode)
         self.offset_in_file = self.section['sh_offset'] + self.offset_in_section if self.section else 0
         self.size = self.fields['st_size']
+        self._relocations: Optional[list[elf_relocation]] = None
 
     @property
     def data(self) -> bytes:
@@ -106,14 +107,14 @@ class elf_symbol():
         this property returns typically all relocations that will be
         applied to the function represented by the symbol.
         """
-        ret: list[elf_relocation] = list()
         assert self.section and self.section.type == 'SHT_PROGBITS'
-        for reloc in self.file.get_relocations():
-            if reloc.target_section == self.section:
+        if self._relocations is None:
+            self._relocations = list()
+            for reloc in self.file._get_section_relocations(self.section):
                 offset = reloc['r_offset'] - self.offset_in_section
                 if 0 <= offset < self['st_size']:
-                    ret.append(reloc)
-        return relocation_list(ret)
+                    self._relocations.append(reloc)
+        return relocation_list(self._relocations)
 
     def __getitem__(self, key: Union[str, int]) -> int:
         if isinstance(key, str):
@@ -433,6 +434,9 @@ class elf_file:
 
         self.code_relocations = self.get_relocations(['.rela.text', '.rel.text'])
 
+        # Relocations by index of the section they apply to, built on first use
+        self._section_relocations: Optional[dict[int, list[elf_relocation]]] = None
+
     def _list_sections(self) -> Generator[dict[str, int], None, None]:
         for i in range(self.fields['e_shnum']):
             offs = self.fields['e_shoff'] + i * self.fields['e_shentsize']
@@ -495,6 +499,22 @@ class elf_file:
                         relocations += relocation_list(self._list_relocations(sh))
 
             return relocation_list(relocations)
+
+    def _get_section_relocations(self, section: elf_section) -> list[elf_relocation]:
+        """Relocations applied to the specified section. All relocation sections
+        are parsed only once, the result is cached.
+
+        Args:
+            section: Section the relocations apply to
+
+        Returns:
+            Relocations in the order of get_relocations()
+        """
+        if self._section_relocations is None:
+            self._section_relocations = dict()
+            for reloc in self.get_relocations():
+                self._section_relocations.setdefault(reloc.target_section.index, []).append(reloc)
+        return self._section_relocations.get(section.index, [])
 
     def _list_relocations(self, sh: elf_section) -> Generator[elf_relocation, None, None]:
         """List relocations for a elf_section.

@@ -174,7 +174,7 @@ class elf_section():
     def symbols(self) -> 'symbol_list':
         """All ELF symbols associated with this section
         """
-        return symbol_list(self.file.list_symbols(self.index))
+        return symbol_list(s for s in self.file.symbols if s['st_shndx'] == self.index)
 
     @property
     def data_hex(self) -> str:
@@ -224,7 +224,7 @@ class elf_relocation():
         self.fields = fields
         self.file = file
         self.index = index
-        self.symbol = file.symbols[symbol_index]
+        self.symbol = file.symbols._data[symbol_index]
         reloc_types = fdat.relocation_table_types.get(file.architecture)
         if reloc_types and relocation_type in reloc_types:
             self.type = reloc_types[relocation_type][0]
@@ -234,7 +234,7 @@ class elf_relocation():
             self.type = str(relocation_type)
             self.bits = 0
             self.calculation = ''
-        self.target_section: elf_section = file.sections[sh_info]
+        self.target_section: elf_section = file.sections._data[sh_info]
 
     def __getitem__(self, key: Union[str, int]) -> int:
         if isinstance(key, str):
@@ -260,12 +260,21 @@ class elf_list(Generic[_T]):
     """
     def __init__(self, data: Iterable[_T]):
         self._data = list(data)
+        self._name_index: Optional[dict[str, _T]] = None
+
+    def _get_name_index(self) -> dict[str, _T]:
+        # Built on first lookup by name; first item wins for duplicate names
+        if self._name_index is None:
+            self._name_index = dict()
+            for el in self._data:
+                self._name_index.setdefault(getattr(el, 'name', ''), el)
+        return self._name_index
 
     def __getitem__(self, key: Union[str, int]) -> _T:
         if isinstance(key, str):
-            elements = [el for el in self._data if getattr(el, 'name', '') == key]
-            assert elements, f'Unknown name: {key}'
-            return elements[0]
+            el = self._get_name_index().get(key)
+            assert el is not None, f'Unknown name: {key}'
+            return el
         else:
             return self._data.__getitem__(key)
 
@@ -277,7 +286,7 @@ class elf_list(Generic[_T]):
 
     def __contains__(self, item: Union[str, int, _T]) -> bool:
         if isinstance(item, str):
-            return any(getattr(el, 'name', '') == item for el in self._data)
+            return item in self._get_name_index()
         elif isinstance(item, int):
             return 0 <= item < len(self._data)
         else:
@@ -426,6 +435,11 @@ class elf_file:
         self.functions = symbol_list(s for s in self.symbols if s.info == 'STT_FUNC')
         self.objects = symbol_list(s for s in self.symbols if s.info == 'STT_OBJECT')
 
+        # Parse every relocation section once
+        self._relocations_by_section: dict[int, list[elf_relocation]] = {
+            sh.index: list(self._list_relocations(sh))
+            for sh in self.sections if sh.type in ('SHT_REL', 'SHT_RELA')}
+
         self.code_relocations = self.get_relocations(['.rela.text', '.rel.text'])
 
         # Assign each relocation to the symbols covering its target address
@@ -434,14 +448,17 @@ class elf_file:
             if sym.section:
                 section_symbols.setdefault(sym.section.index, []).append(sym)
         for reloc in self.get_relocations():
-            for sym in section_symbols.get(reloc.target_section.index, []):
-                if 0 <= reloc['r_offset'] - sym.offset_in_section < sym.size:
+            r_offset = reloc.fields['r_offset']
+            for sym in section_symbols.get(reloc.target_section.index, ()):
+                if 0 <= r_offset - sym.offset_in_section < sym.size:
                     sym._relocations.append(reloc)
 
     def _list_sections(self) -> Generator[dict[str, int], None, None]:
+        bw = str(self.bit_width)
+        layout = [(fn, int(f[bw], base=16), int(f['size' + bw])) for fn, f in fdat.section_header.items()]
         for i in range(self.fields['e_shnum']):
             offs = self.fields['e_shoff'] + i * self.fields['e_shentsize']
-            yield {fn: self._read_from_sh_field(offs, fn) for fn in fdat.section_header.keys()}
+            yield {fn: self.read_int(offs + fo, fs) for fn, fo, fs in layout}
 
     def list_symbols(self, section_index: Optional[int] = None) -> Generator[elf_symbol, None, None]:
         """List ELF symbols.
@@ -489,7 +506,7 @@ class elf_file:
         """
         if isinstance(reloc_section, elf_section):
             assert reloc_section.type in ('SHT_REL', 'SHT_RELA'), f'{reloc_section.name} is not a relocation section'
-            return relocation_list(self._list_relocations(reloc_section))
+            return relocation_list(self._relocations_by_section[reloc_section.index])
         else:
             relocations: list[elf_relocation] = list()
             for sh in self.sections:
@@ -497,7 +514,7 @@ class elf_file:
                     if reloc_section is None or \
                             (isinstance(reloc_section, str) and sh.name == reloc_section) or \
                             (isinstance(reloc_section, list) and sh.name in reloc_section):
-                        relocations += relocation_list(self._list_relocations(sh))
+                        relocations += self._relocations_by_section[sh.index]
 
             return relocation_list(relocations)
 
@@ -511,8 +528,10 @@ class elf_file:
         Returns:
             Relocations from specified elf_section
         """
-        sh_offset = sh['sh_offset']
-        for i, el_off in enumerate(range(sh_offset, sh['sh_size'] + sh_offset, sh['sh_entsize'])):
+        sh_offset = sh.fields['sh_offset']
+        sh_info = sh.fields['sh_info']
+        is_rela = sh.type == 'SHT_RELA'
+        for i, el_off in enumerate(range(sh_offset, sh.fields['sh_size'] + sh_offset, sh.fields['sh_entsize'])):
             ret: dict[str, int] = dict()
 
             if self.bit_width == 32:
@@ -521,20 +540,20 @@ class elf_file:
                 symbol_index = r_info >> 8
                 relocation_type = r_info & 0xFF
                 ret['r_addend'] = self.read_int(el_off + 8, 4, True) \
-                    if sh.type == 'SHT_RELA' else self._get_rel_addend(relocation_type, r_offset, sh)
+                    if is_rela else self._get_rel_addend(relocation_type, r_offset, sh)
             elif self.bit_width == 64:
                 r_offset = self.read_int(el_off, 8)
                 r_info = self.read_int(el_off + 8, 8)
                 symbol_index = r_info >> 32
                 relocation_type = r_info & 0xFFFFFFFF
                 ret['r_addend'] = self.read_int(el_off + 16, 8, True) \
-                    if sh.type == 'SHT_RELA' else self._get_rel_addend(relocation_type, r_offset, sh)
+                    if is_rela else self._get_rel_addend(relocation_type, r_offset, sh)
             else:
                 raise NotImplementedError(f"{self.bit_width} bit is not supported")
 
             ret['r_offset'] = r_offset
             ret['r_info'] = r_info
-            yield elf_relocation(self, ret, symbol_index, relocation_type, sh['sh_info'], i)
+            yield elf_relocation(self, ret, symbol_index, relocation_type, sh_info, i)
 
     def _get_rel_addend(self, relocation_type: int, r_offset: int, reloc_section: elf_section) -> int:
         reloc_types = fdat.relocation_table_types.get(self.architecture)
@@ -657,12 +676,6 @@ class elf_file:
         offs = int(field[str(self.bit_width)], base=16)
         byte_len = int(field['size' + str(self.bit_width)])
         return self.read_bytes(offs, byte_len)
-
-    def _read_from_sh_field(self, offset: int, field_name: str) -> int:
-        field = fdat.section_header[field_name]
-        offs = int(field[str(self.bit_width)], base=16) + offset
-        byte_len = int(field['size' + str(self.bit_width)])
-        return self.read_int(offs, byte_len)
 
     def __repr__(self) -> str:
         hf_list = ((hf, self.fields[hf['field_name']]) for hf in fdat.elf_header_field.values())
